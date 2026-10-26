@@ -1102,7 +1102,6 @@ input:focus-visible {
     gap: 8px 10px;
     padding-top: 13px;
     transform: translateY(-100%);
-    border-top: 1px solid #edf0f2;
     color: var(--dark-grey);
     font-size: 8px;
 }
