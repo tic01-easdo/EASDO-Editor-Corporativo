@@ -506,7 +506,7 @@ const saveState = document.getElementById("saveState");
 const saveStateText = document.getElementById("saveStateText");
 const wordCount = document.getElementById("wordCount");
 const toast = document.getElementById("toast");
-const importFile = document.getElementById("importFile");
+const loadFileInput = document.getElementById("loadFileInput");
 let saveTimer;
 let toastTimer;
 let activeTitleRange = null;
@@ -797,7 +797,7 @@ function storeDocument(blocks) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     displayTitle(data.title);
     countWords(blocks);
-    setSaveState("Guardado en este dispositivo");
+    setSaveState("Copia local actualizada");
 }
 
 const editor = new EditorJS({
@@ -834,7 +834,7 @@ const editor = new EditorJS({
     data: { blocks: initialDocument.blocks },
     onChange() {
         schedulePagination();
-        setSaveState("Guardando…", "saving");
+        setSaveState("Actualizando…", "saving");
         clearTimeout(saveTimer);
         saveTimer = setTimeout(async () => {
             try {
@@ -842,7 +842,7 @@ const editor = new EditorJS({
                 storeDocument(output.blocks);
             } catch (error) {
                 console.error("No se pudo guardar el documento:", error);
-                setSaveState("No se pudo guardar", "error");
+                setSaveState("Error en la copia local", "error");
                 showToast("No se pudo guardar. Comprueba el almacenamiento disponible.");
             }
         }, 650);
@@ -854,10 +854,10 @@ displayTitle(initialDocument.title);
 
 editor.isReady.then(() => {
     countWords(initialDocument.blocks);
-    setSaveState("Guardado en este dispositivo");
+    setSaveState("Copia local actualizada");
     if (initialDocument.error) {
         setSaveState("No se pudo recuperar", "error");
-        showToast("No se pudo recuperar el documento local. Puedes importar una copia JSON.");
+        showToast("No se pudo recuperar el documento local. Puedes cargar una copia JSON.");
     } else if (!localStorage.getItem(STORAGE_KEY)) {
         storeDocument(initialDocument.blocks);
     }
@@ -896,7 +896,7 @@ document.querySelectorAll("[data-block]").forEach(button => {
 });
 
 documentHeadingInput.addEventListener("input", () => {
-    setSaveState("Guardando…", "saving");
+    setSaveState("Actualizando…", "saving");
     clearTimeout(saveTimer);
     saveTimer = setTimeout(async () => {
         try {
@@ -904,7 +904,7 @@ documentHeadingInput.addEventListener("input", () => {
             storeDocument(output.blocks);
         } catch (error) {
             console.error("No se pudo guardar la línea superior del título:", error);
-            setSaveState("No se pudo guardar", "error");
+            setSaveState("Error en la copia local", "error");
             showToast("No se pudo guardar. Comprueba el almacenamiento disponible.");
         }
     }, 650);
@@ -913,7 +913,7 @@ documentHeadingInput.addEventListener("input", () => {
 titleInput.addEventListener("input", () => {
     resizeDocumentTitle();
     displayTitle(getTitleText());
-    setSaveState("Guardando…", "saving");
+    setSaveState("Actualizando…", "saving");
     clearTimeout(saveTimer);
     saveTimer = setTimeout(async () => {
         try {
@@ -921,7 +921,7 @@ titleInput.addEventListener("input", () => {
             storeDocument(output.blocks);
         } catch (error) {
             console.error("No se pudo guardar el título:", error);
-            setSaveState("No se pudo guardar", "error");
+            setSaveState("Error en la copia local", "error");
             showToast("No se pudo guardar. Comprueba el almacenamiento disponible.");
         }
     }, 650);
@@ -971,7 +971,22 @@ function validateDocument(data) {
     return { title, titleMarkup, documentHeading, footerText, blocks };
 }
 
-async function exportDocument() {
+async function saveDocumentToFile() {
+    const title = getTitleText().trim() || DEFAULT_TITLE;
+    const fileName = `${title.replace(/[<>:"/\\|?*\u0000-\u001F]/g, "-") || "documento"}.json`;
+    let fileHandle = null;
+    // El selector se abre antes de cualquier espera para no perder la activación del clic.
+    if (typeof window.showSaveFilePicker === "function") {
+        try {
+            fileHandle = await window.showSaveFilePicker({
+                suggestedName: fileName,
+                types: [{ description: "Documento JSON", accept: { "application/json": [".json"] } }]
+            });
+        } catch (error) {
+            if (error.name === "AbortError") return;
+            console.warn("No se pudo abrir el selector de archivos; se usará la descarga:", error);
+        }
+    }
     try {
         await editor.isReady;
         const output = await editor.save();
@@ -979,7 +994,7 @@ async function exportDocument() {
         const payload = {
             app: "Oficina",
             version: 1,
-            title: getTitleText().trim() || DEFAULT_TITLE,
+            title,
             titleMarkup: sanitizeTitleMarkup(titleInput.innerHTML),
             documentHeading: documentHeadingInput.value,
             footerText: footerReference.value,
@@ -987,24 +1002,30 @@ async function exportDocument() {
             blocks: output.blocks
         };
         const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `${payload.title.replace(/[<>:"/\\|?*\u0000-\u001F]/g, "-") || "documento"}.json`;
-        link.click();
-        setTimeout(() => URL.revokeObjectURL(url), 1000);
-        showToast("Documento exportado como JSON.");
+        if (fileHandle) {
+            const writable = await fileHandle.createWritable();
+            await writable.write(blob);
+            await writable.close();
+        } else {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = fileName;
+            link.click();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+        showToast("Documento guardado como JSON.");
     } catch (error) {
-        console.error("No se pudo exportar el documento:", error);
-        setSaveState("Error al exportar", "error");
-        showToast("No se pudo exportar el documento.");
+        console.error("No se pudo guardar el documento:", error);
+        setSaveState("Error al guardar", "error");
+        showToast("No se pudo guardar el documento.");
     }
 }
 
-document.getElementById("exportButton").addEventListener("click", exportDocument);
-document.getElementById("importButton").addEventListener("click", () => importFile.click());
+document.getElementById("saveButton").addEventListener("click", saveDocumentToFile);
+document.getElementById("loadButton").addEventListener("click", () => loadFileInput.click());
 document.getElementById("printButton").addEventListener("click", () => window.print());
-document.getElementById("importFile").addEventListener("change", async event => {
+loadFileInput.addEventListener("change", async event => {
     const file = event.target.files[0];
     if (!file) {
         return;
@@ -1012,28 +1033,28 @@ document.getElementById("importFile").addEventListener("change", async event => 
 
     try {
         const data = JSON.parse(await file.text());
-        const imported = validateDocument(data);
-        if (!window.confirm("La importación reemplazará el contenido de este documento. ¿Quieres continuar?")) {
+        const loaded = validateDocument(data);
+        if (!window.confirm("Cargar este archivo reemplazará el contenido de este documento. ¿Quieres continuar?")) {
             return;
         }
 
         await editor.isReady;
-        await editor.render({ blocks: imported.blocks });
-        documentHeadingInput.value = imported.documentHeading;
-        setTitleContent(imported.title, imported.titleMarkup);
+        await editor.render({ blocks: loaded.blocks });
+        documentHeadingInput.value = loaded.documentHeading;
+        setTitleContent(loaded.title, loaded.titleMarkup);
         titleWeightLabel.textContent = DEFAULT_TITLE_FONT_WEIGHT;
         titleWeightPopover.querySelectorAll("[data-title-weight]").forEach(option => {
             option.setAttribute("aria-pressed", String(option.dataset.titleWeight === DEFAULT_TITLE_FONT_WEIGHT));
         });
         resizeDocumentTitle();
-        footerReference.value = imported.footerText;
+        footerReference.value = loaded.footerText;
         displayTitle(getTitleText());
         const output = await editor.save();
         storeDocument(output.blocks);
-        showToast("Documento importado correctamente.");
+        showToast("Documento cargado correctamente.");
     } catch (error) {
-        console.error("No se pudo importar el documento:", error);
-        showToast(`No se pudo importar: ${error.message}`);
+        console.error("No se pudo cargar el documento:", error);
+        showToast(`No se pudo cargar: ${error.message}`);
     } finally {
         event.target.value = "";
     }
@@ -1067,7 +1088,7 @@ document.querySelector(".new-document-button").addEventListener("click", createN
 
 footerReference.addEventListener("input", () => {
     schedulePagination();
-    setSaveState("Guardando…", "saving");
+    setSaveState("Actualizando…", "saving");
     clearTimeout(saveTimer);
     saveTimer = setTimeout(async () => {
         try {
@@ -1075,7 +1096,7 @@ footerReference.addEventListener("input", () => {
             storeDocument(output.blocks);
         } catch (error) {
             console.error("No se pudo guardar el pie del documento:", error);
-            setSaveState("No se pudo guardar", "error");
+            setSaveState("Error en la copia local", "error");
             showToast("No se pudo guardar. Comprueba el almacenamiento disponible.");
         }
     }, 650);

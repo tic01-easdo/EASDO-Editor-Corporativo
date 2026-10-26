@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentación · Oficina</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #1d2433;
+            --muted: #5b6475;
+            --navy: #1f3a5f;
+            --line: #d9dee7;
+            --bg: #f4f6f9;
+            --card: #ffffff;
+            --note: #fff7e0;
+            --note-line: #e8c96a;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 40px 16px;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: "Roboto Condensed", Arial, sans-serif;
+            font-size: 17px;
+            line-height: 1.55;
+        }
+
+        main {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 32px 36px;
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+        }
+
+        h1 {
+            margin: 0 0 4px;
+            color: var(--navy);
+            font-size: 30px;
+            font-weight: 700;
+        }
+
+        h2 {
+            margin: 32px 0 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--line);
+            color: var(--navy);
+            font-size: 22px;
+            font-weight: 500;
+        }
+
+        h3 {
+            margin: 20px 0 6px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .subtitle { margin: 0; color: var(--muted); }
+
+        code {
+            padding: 1px 5px;
+            background: var(--bg);
+            border: 1px solid var(--line);
+            border-radius: 4px;
+            font-size: 15px;
+        }
+
+        table {
+            width: 100%;
+            margin: 12px 0;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px 10px;
+            border: 1px solid var(--line);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th { background: var(--bg); font-weight: 500; }
+
+        .note {
+            margin: 16px 0;
+            padding: 12px 16px;
+            background: var(--note);
+            border-left: 4px solid var(--note-line);
+            border-radius: 4px;
+        }
+
+        @media (max-width: 680px) {
+            body { padding: 16px; }
+            main { padding: 20px 18px; }
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Documentación</h1>
+        <p class="subtitle">Editor Oficina</p>
+
+        <h2>Guardar documentos: limitaciones del diálogo de guardado</h2>
+        <p>
+            Al pulsar <strong>Guardar</strong>, el editor intenta abrir el diálogo «Guardar como» del sistema
+            para que el usuario elija la carpeta y el nombre del archivo <code>.json</code>. El nombre propuesto
+            es el título del documento. Este diálogo depende de la API <code>showSaveFilePicker</code>
+            (File System Access API), que no está disponible en todos los navegadores ni en todas las situaciones.
+        </p>
+
+        <h3>Compatibilidad por navegador</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Navegador</th>
+                    <th>Comportamiento al guardar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Chrome, Edge, Opera (escritorio)</td>
+                    <td>Se abre el diálogo «Guardar como» y el usuario elige dónde guardar.</td>
+                </tr>
+                <tr>
+                    <td>Firefox</td>
+                    <td>
+                        No admite la API. El archivo se descarga directamente en la carpeta de descargas.
+                        Para que pregunte dónde guardar, hay que activar en sus ajustes
+                        «Preguntar siempre dónde guardar los archivos».
+                    </td>
+                </tr>
+                <tr>
+                    <td>Safari</td>
+                    <td>No admite la API. El archivo se descarga en la carpeta de descargas.</td>
+                </tr>
+                <tr>
+                    <td>Navegadores móviles</td>
+                    <td>No admiten la API. Se usa la descarga normal del navegador.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Contexto seguro obligatorio</h3>
+        <p>
+            Aunque el navegador sea compatible, la API solo funciona en un <em>contexto seguro</em>:
+        </p>
+        <ul>
+            <li><strong>Funciona</strong> al abrir el editor desde <code>http://localhost:8000</code> o desde una dirección <code>https://</code>.</li>
+            <li><strong>No funciona</strong> al abrir <code>index.html</code> directamente como archivo (<code>file://</code>).</li>
+            <li><strong>No funciona</strong> al acceder desde otro equipo por HTTP sin cifrar (por ejemplo, <code>http://192.168.1.20:8000</code>).</li>
+        </ul>
+        <p>En estos casos el editor usa automáticamente la descarga normal.</p>
+
+        <h3>Otros detalles</h3>
+        <ul>
+            <li>Si el usuario cancela el diálogo, no se guarda nada y no se muestra ningún error.</li>
+            <li>
+                Si el diálogo no se puede abrir por cualquier otro motivo, el editor deja un aviso en la consola
+                y recurre a la descarga normal.
+            </li>
+            <li>
+                El navegador solo permite abrir el diálogo como respuesta directa a un clic del usuario,
+                por eso no se puede lanzar el guardado en archivo de forma automática.
+            </li>
+        </ul>
+
+        <div class="note">
+            El guardado automático del editor no se ve afectado: el documento se sigue guardando en el
+            almacenamiento local del navegador (<code>localStorage</code>) mientras se escribe. Ese guardado
+            pertenece a cada navegador y equipo; para conservar o mover un documento hay que guardarlo con el botón <strong>Guardar</strong>.
+        </div>
+    </main>
+</body>
+</html>

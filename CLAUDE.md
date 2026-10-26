@@ -22,7 +22,7 @@ No hay pruebas automáticas: comprueba los cambios a mano en el navegador, inclu
 
 ## Arquitectura
 
-- `index.html`: estructura de la aplicación (barra lateral y barra superior con Importar/Imprimir/Exportar) y el `article.document-page`, que contiene la imagen fija de la cabecera, el campo `#documentHeading`, el `#documentTitle` editable (contenteditable), el contenedor de Editor.js `#editor` y el pie (`#footerReference` y la fecha, que se genera sola). En el HTML queda una barra de inserción comentada (botones `data-block`); `editor.js` sigue conectando cualquier botón `[data-block]` mediante `addBlock()`.
+- `index.html`: estructura de la aplicación (barra lateral y barra superior con Cargar/Imprimir/Guardar) y el `article.document-page`, que contiene la imagen fija de la cabecera, el campo `#documentHeading`, el `#documentTitle` editable (contenteditable), el contenedor de Editor.js `#editor` y el pie (`#footerReference` y la fecha, que se genera sola). En el HTML queda una barra de inserción comentada (botones `data-block`); `editor.js` sigue conectando cualquier botón `[data-block]` mediante `addBlock()`.
 - `js/editor.js`: todo lo demás, en un único script global (sin módulos):
   - **Herramientas propias de Editor.js**: `SignatureTool` (`signature`), `DatosTool` (`datos`) y el ajuste de bloque `AddCellTune` (registrado como `addCell`, solo lo usa `datos` y llama a `block.call("addCell")`).
   - **Bloque `signature`**: de 1 a 3 firmas (`SIGNATURE_MAX`) en una cuadrícula de 3 columnas (`.firma-block`), con datos `{signatures: [{label, name}], date?}`. Las firmas se añaden o quitan de una en una desde el menú del bloque (`renderSettings()`), que también permite añadir o quitar una fecha (`.firma-date`) sobre la primera firma; `date` solo se guarda si la fecha está presente. Un bloque antiguo `{name}` se lee como una sola firma.
@@ -30,7 +30,7 @@ No hay pruebas automáticas: comprueba los cambios a mano en el navegador, inclu
   - **Título**: un div contenteditable (no un input) que admite saltos de línea y grosor de letra por selección (`500`/`300`) mediante `<span data-font-weight>`. Su HTML siempre pasa por `sanitizeTitleMarkup()`, que solo permite texto, `<br>` y esos span. La longitud máxima se controla a mano con `data-maxlength` en los manejadores de `beforeinput` y `paste`.
   - **Guardado**: guardado automático en `localStorage` con la clave `oficina-document-v1` a través de `storeDocument()`, con una espera de 650 ms sobre un `saveTimer` compartido. El mismo bloque de espera, guardado y error está duplicado en el `onChange` de Editor.js y en los manejadores de entrada del encabezado, el título y el pie.
   - **Paginación** (`paginateDocument()`, al final del archivo): el editor muestra el documento en hojas A4 separadas, igual que al imprimir. Los bloques que invadirían el pie reciben el atributo `data-page-break` y un margen `--page-break` que los lleva a la hoja siguiente; un bloque de encabezado se mueve junto con el bloque que lo sigue. `#pageLayer` dibuja las hojas y repite la cabecera y el pie (referencia, fecha y "PÁGINA X DE N") a partir de la página 2, mientras que la página 1 usa los elementos reales y editables. Al imprimir, esos mismos bloques reciben `break-before: page` y `--page-content-top`, porque Chrome recorta los márgenes en los saltos de página no forzados. Un manejador de `beforeprint` recalcula la disposición con el ancho A4 (`.is-printing`). La paginación se vuelve a ejecutar mediante un `ResizeObserver` y desde `onChange`. Los bloques nunca se dividen entre páginas, así que un bloque más alto que una página se superpondrá al pie.
-  - **Importación y exportación**: al exportar se descarga un archivo JSON con el nombre del título; al importar, el archivo pasa por `validateDocument()`, que rechaza cualquier bloque cuyo `type` no esté en `SUPPORTED_BLOCKS`.
+  - **Cargar y guardar archivos** (`#loadButton`/`#loadFileInput` y `#saveButton`/`saveDocumentToFile()`): al guardar se abre el diálogo «Guardar como» (`showSaveFilePicker`) o, si no está disponible, se descarga un archivo JSON con el nombre del título; al cargar, el archivo pasa por `validateDocument()`, que rechaza cualquier bloque cuyo `type` no esté en `SUPPORTED_BLOCKS`.
 
 ### Formato JSON del documento
 
@@ -40,11 +40,11 @@ No hay pruebas automáticas: comprueba los cambios a mano en el navegador, inclu
   "blocks": [ /* bloques de Editor.js */ ] }
 ```
 
-La importación también acepta una lista de bloques sin envoltorio. Al leer se mantiene la compatibilidad con formatos anteriores: un `titleFontWeight` antiguo se convierte en `titleMarkup`, y las celdas antiguas de `datos` con `text` se leen como `content`. En `docs/` hay documentos exportados de ejemplo (junto a impresiones en PDF del resultado esperado) que sirven para probar la importación.
+La carga también acepta una lista de bloques sin envoltorio. Al leer se mantiene la compatibilidad con formatos anteriores: un `titleFontWeight` antiguo se convierte en `titleMarkup`, y las celdas antiguas de `datos` con `text` se leen como `content`. En `docs/` hay documentos guardados de ejemplo (junto a impresiones en PDF del resultado esperado) que sirven para probar la carga. Las limitaciones del diálogo de guardado están en `documentacion.html`.
 
 ### Añadir un tipo de bloque
 
-Un tipo de bloque nuevo debe añadirse en todos estos sitios: la configuración `tools` de `new EditorJS(...)`, `SUPPORTED_BLOCKS` (si no, la importación lo rechaza), el mapa de datos por defecto de `addBlock()` y el `switch` de `countWords()` (si no, sus palabras no se cuentan). Añade sus estilos a `css/styles.css`, con reglas de impresión si hacen falta.
+Un tipo de bloque nuevo debe añadirse en todos estos sitios: la configuración `tools` de `new EditorJS(...)`, `SUPPORTED_BLOCKS` (si no, la carga lo rechaza), el mapa de datos por defecto de `addBlock()` y el `switch` de `countWords()` (si no, sus palabras no se cuentan). Añade sus estilos a `css/styles.css`, con reglas de impresión si hacen falta.
 
 ## Estilos
 
