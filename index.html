@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f6f8">
+    <meta name="description" content="Editor sencillo para crear y guardar documentos corporativos.">
+    <title>Documento sin título · Oficina</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <div class="app-shell">
+        <aside class="sidebar" aria-label="Navegación principal">
+            <a class="brand" href="./" aria-label="Oficina, inicio">
+                <span class="brand-mark" aria-hidden="true">
+                    <svg viewBox="0 0 32 32" fill="none">
+                        <path d="M8 5.75h10l6 6v14.5H8V5.75Z" stroke="currentColor" stroke-width="2" />
+                        <path d="M18 5.75v6h6M12 17h8M12 21h8" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </span>
+                <span class="brand-copy"><strong>oficina</strong><small>EDITOR CORPORATIVO</small></span>
+            </a>
+
+            <div class="sidebar-section-label">ESPACIO DE TRABAJO</div>
+            <div class="workspace-link is-current" aria-current="page">
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                    <rect x="3" y="3" width="5" height="5" rx="1" />
+                    <rect x="12" y="3" width="5" height="5" rx="1" />
+                    <rect x="3" y="12" width="5" height="5" rx="1" />
+                    <rect x="12" y="12" width="5" height="5" rx="1" />
+                </svg>
+                <span>Editor</span>
+            </div>
+
+            <div class="sidebar-heading">
+                <span>DOCUMENTO ACTUAL</span>
+                <button class="icon-button new-document-button" type="button" aria-label="Crear documento nuevo"
+                    title="Crear documento nuevo">
+                    <svg viewBox="0 0 20 20" aria-hidden="true">
+                        <path d="M10 4v12M4 10h12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="document-link is-current" aria-current="page">
+                <span class="document-indicator" aria-hidden="true"></span>
+                <span class="document-link-title">Documento sin título</span>
+            </div>
+
+            <div class="sidebar-bottom">
+                <div class="privacy-note">
+                    <span class="privacy-icon" aria-hidden="true">
+                        <svg viewBox="0 0 20 20">
+                            <rect x="4" y="9" width="12" height="8" rx="2" />
+                            <path d="M7 9V6a3 3 0 0 1 6 0v3M10 12v2" />
+                        </svg>
+                    </span>
+                    <span><strong>Documento privado</strong><small>Se guarda en este navegador.</small></span>
+                </div>
+                <div class="sidebar-version">Editor local · Versión 1.6</div>
+            </div>
+        </aside>
+
+        <main class="main-panel">
+            <header class="topbar">
+                <div class="breadcrumb">
+                    <span>Editor</span>
+                    <svg viewBox="0 0 16 16" aria-hidden="true">
+                        <path d="m6 3 5 5-5 5" />
+                    </svg>
+                    <span class="breadcrumb-current" id="breadcrumbTitle">Documento sin título</span>
+                </div>
+                <div class="topbar-actions">
+                    <div class="save-state" id="saveState" role="status" aria-live="polite">
+                        <span class="save-dot"></span>
+                        <span id="saveStateText">Guardado en este dispositivo</span>
+                    </div>
+                    <button class="button button-secondary" id="importButton" type="button" aria-label="Importar JSON">
+                        <svg viewBox="0 0 20 20" aria-hidden="true">
+                            <path d="M10 13V3m0 0L6 7m4-4 4 4M4 12v5h12v-5" />
+                        </svg>
+                        <span>Importar</span>
+                    </button>
+                    <button class="button button-secondary" id="printButton" type="button"
+                        aria-label="Imprimir documento">
+                        <svg viewBox="0 0 20 20" aria-hidden="true">
+                            <path
+                                d="M6 7V3h8v4M6 14H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2h-2" />
+                            <path d="M6 11h8v6H6zM15 9h1" />
+                        </svg>
+                        <span>Imprimir</span>
+                    </button>
+                    <button class="button button-primary" id="exportButton" type="button"
+                        aria-label="Exportar documento">
+                        <svg viewBox="0 0 20 20" aria-hidden="true">
+                            <path d="M10 3v10m0 0 4-4m-4 4-4-4M4 14v3h12v-3" />
+                        </svg>
+                        <span>Exportar</span>
+                    </button>
+                </div>
+            </header>
+
+            <section class="editor-workspace" aria-label="Editor de documentos">
+                <div class="editor-column">
+                    <div class="page-context">
+                        <span class="context-icon" aria-hidden="true">
+                            <svg viewBox="0 0 20 20">
+                                <path d="M5 2.75h7l4 4v10.5H5V2.75Z" />
+                                <path d="M12 2.75v4h4M8 11h5M8 14h5" />
+                            </svg>
+                        </span>
+                        <span>DOCUMENTO</span>
+                        <span class="context-divider"></span>
+                        <span id="wordCount">0 palabras</span>
+                        <span class="context-divider"></span>
+                        <span id="pageCount">1 página</span>
+                    </div>
+
+                    <article class="document-page">
+                        <div class="page-layer" id="pageLayer" aria-hidden="true"></div>
+                        <header class="document-header">
+                            <img src="img/EASDO_cabecera_oficial.png" alt="Generalitat Valenciana, ISEACV y EASDO">
+                        </header>
+                        <label class="visually-hidden" for="documentHeading">Línea superior del título</label>
+                        <input class="document-heading" id="documentHeading" type="text" maxlength="120"
+                            placeholder="Nombre del centro" autocomplete="off">
+                        <label class="visually-hidden" for="documentTitle">Título del documento</label>
+                        <div class="document-title-editor">
+                            <div class="document-title-tools">
+                                <button class="document-title-weight-toggle" id="titleWeightToggle" type="button"
+                                    aria-label="Cambiar grosor del título" aria-controls="titleWeightPopover"
+                                    aria-expanded="false">
+                                    <span id="titleWeightLabel">500</span>
+                                    <span aria-hidden="true">⌄</span>
+                                </button>
+                                <div class="ce-popover document-title-weight-popover" id="titleWeightPopover"
+                                    role="group" aria-label="Grosor del título" hidden>
+                                    <div class="ce-popover__items">
+                                        <button class="ce-popover__item" type="button" data-title-weight="500"
+                                            aria-pressed="true">
+                                            <span class="ce-popover__item-label">500</span>
+                                        </button>
+                                        <button class="ce-popover__item" type="button" data-title-weight="300"
+                                            aria-pressed="false">
+                                            <span class="ce-popover__item-label">300</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="document-title" id="documentTitle" contenteditable="true" role="textbox"
+                                aria-label="Título del documento" aria-multiline="true" data-maxlength="120"
+                                data-placeholder="Título del documento"></div>
+                        </div>
+                     <!-- Editor Toolbar 
+                            <p class="document-subtitle">Un espacio claro para tus ideas y documentos de trabajo.</p>
+                        <div class="title-rule"></div>
+                        <div class="editor-toolbar" role="toolbar" aria-label="Insertar bloque">
+                            <span class="toolbar-label">INSERTAR</span>
+                            <button class="tool-button" type="button" data-block="paragraph" title="Añadir texto">
+                                <svg viewBox="0 0 20 20" aria-hidden="true">
+                                    <path d="M4 5h12M4 9h12M4 13h8M4 17h6" />
+                                </svg>
+                                <span>Texto</span>
+                            </button>
+                            <button class="tool-button" type="button" data-block="header" data-level="2" title="Añadir encabezado">
+                                <svg viewBox="0 0 20 20" aria-hidden="true">
+                                    <path d="M4 4v12M12 4v12M4 10h8M16 10v6M16 6v.01" />
+                                </svg>
+                                <span>Encabezado</span>
+                            </button>
+                            <button class="tool-button" type="button" data-block="list" title="Añadir lista">
+                                <svg viewBox="0 0 20 20" aria-hidden="true">
+                                    <path d="M8 5h9M8 10h9M8 15h9" />
+                                    <circle cx="4" cy="5" r=".8" />
+                                    <circle cx="4" cy="10" r=".8" />
+                                    <circle cx="4" cy="15" r=".8" />
+                                </svg>
+                                <span>Lista</span>
+                            </button>
+                            <button class="tool-button" type="button" data-block="table" title="Añadir tabla">
+                                <svg viewBox="0 0 20 20" aria-hidden="true">
+                                    <rect x="3" y="4" width="14" height="12" rx="1" />
+                                    <path d="M3 8h14M8 8v8M13 8v8" />
+                                </svg>
+                                <span>Tabla</span>
+                            </button>
+                            <button class="tool-button" type="button" data-block="datos" title="Añadir bloque de datos">
+                                <svg viewBox="0 0 20 20" aria-hidden="true">
+                                    <rect x="2.5" y="4" width="15" height="12" rx="1" />
+                                    <path d="M4.6 8h10.8M4.6 12h10.8M6 4v12M10 4v12M14 4v12" />
+                                </svg>
+                                <span>Datos</span>
+                            </button>
+                            <button class="tool-button" type="button" data-block="signature" title="Añadir firma">
+                                <svg viewBox="0 0 20 20" aria-hidden="true">
+                                    <path d="M3 15c2-1.5 2.5-7 4-7 1.7 0-.2 6 1.2 6 1.2 0 1.5-3.2 2.7-3.2 1.1 0 .7 2.2 2 2.2 1 0 1.7-.5 2.8-1.3M3 18h14" />
+                                </svg>
+                                <span>Firma</span>
+                            </button>
+                        </div>
+
+                        -->
+
+                        <div id="editor" class="editor-content"></div>
+
+                        <div class="document-footer">
+                            <input class="footer-reference" id="footerReference" type="text" maxlength="180"
+                                aria-label="Texto del pie del documento">
+                                 <span id="documentDate"></span>
+                            <span class="document-page-number" id="documentPageNumber"></span>
+                        </div>
+                    </article>
+
+                    <div class="workspace-hint">
+                        <svg viewBox="0 0 20 20" aria-hidden="true">
+                            <circle cx="10" cy="10" r="7.5" />
+                            <path d="M10 9v4M10 6.5v.01" />
+                        </svg>
+                        <span>Haz clic en el documento para empezar a escribir. Usa <kbd>/</kbd> dentro del editor para
+                            explorar bloques.</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <input id="importFile" type="file" accept=".json,application/json" hidden>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@2.30.8/dist/editorjs.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@2.8.8/dist/header.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/paragraph@2.11.7/dist/paragraph.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@1.9.0/dist/list.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/table@2.4.5/dist/table.umd.js"></script>
+    <script src="js/editor.js"></script>
+</body>
+
+</html>

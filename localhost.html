@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Servidor Local</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@100..700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=edit" />
+  <style>
+    body {
+      font-family: "Roboto Condensed", sans-serif;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 24px;
+      line-height: 1.6;
+      color: #222;
+      background: #f8f9fa;
+    }
+    h1 {
+      margin-bottom: 16px;
+    }
+    code {
+      background: #e9ecef;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.95em;
+    }
+    .box {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .links {
+      margin-top: 18px;
+    }
+    a {
+      display: inline-block;
+      margin-right: 12px;
+      margin-bottom: 12px;
+      padding: 10px 14px;
+      background: #1f5aa6;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+    }
+    a:hover {
+      background: #163f78;
+    }
+    ol {
+      padding-left: 20px;
+    }
+    
+    .material-symbols-outlined {
+      font-variation-settings:
+      'FILL' 0,
+      'wght' 400,
+      'GRAD' 0,
+      'opsz' 24
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>Servidor local del proyecto</h1>
+
+    <p>Para que la app funcione correctamente y pueda cargar la plantilla JSON y guardar archivos, debes abrirla desde un servidor local.</p>
+
+    <ol>
+      <li>Abre PowerShell o Terminal en la carpeta del proyecto.</li>
+      <li>
+        <code>cd "C:\Users\Tsuna\Desktop\EDITOR b1.6"</code>
+      </li>
+      <li>Ejecuta:</li>
+        <p>Mac</p><code>python3 -m http.server 8000</code>
+        <p>PC</p><code>py -3 -m http.server 8000</code>
+    </ol>
+
+    <hr>
+    <p>Direcciones en el navegador:</p>
+
+    <div class="links">
+      <a href="http://localhost:8000/index.html" target="_blank">Abrir Editor</a>
+    </div>
+<span class="material-symbols-outlined">
+edit
+</span>
+  </div>
+</body>
+</html>

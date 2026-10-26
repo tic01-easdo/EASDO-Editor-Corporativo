@@ -1,0 +1,74 @@
+{
+  "app": "Oficina",
+  "version": 1,
+  "title": "Solicitud de Permiso",
+  "updatedAt": "2026-10-20T09:04:10.398Z",
+  "blocks": [
+    {
+      "id": "tDK-X-fkJh",
+      "type": "list",
+      "data": {
+        "style": "unordered",
+        "items": []
+      }
+    },
+    {
+      "id": "eo1V6b_vjh",
+      "type": "table",
+      "data": {
+        "withHeadings": true,
+        "stretched": false,
+        "content": [
+          [
+            "Nombre y Apellidos",
+            "DNI",
+            ""
+          ],
+          [
+            "Vicente Alemañ",
+            "44587799",
+            ""
+          ]
+        ]
+      }
+    },
+    {
+      "id": "R_3VS4ySzY",
+      "type": "table",
+      "data": {
+        "withHeadings": true,
+        "stretched": false,
+        "content": []
+      }
+    },
+    {
+      "id": "ryLksxLIrr",
+      "type": "header",
+      "data": {
+        "text": "Expongo",
+        "level": 2
+      }
+    },
+    {
+      "id": "mpXbo4AMuu",
+      "type": "paragraph",
+      "data": {
+        "text": "que tal y cual y mescual"
+      }
+    },
+    {
+      "id": "HPWwi45IzB",
+      "type": "paragraph",
+      "data": {
+        "text": "jgjkgkhjgkjgkjgkjg"
+      }
+    },
+    {
+      "id": "YKGIJyhmzE",
+      "type": "signature",
+      "data": {
+        "name": ""
+      }
+    }
+  ]
+}
