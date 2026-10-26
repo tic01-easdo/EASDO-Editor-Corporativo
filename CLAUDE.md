@@ -16,7 +16,7 @@ Sirve la carpeta con cualquier servidor estático y abre `index.html`:
 py -3 -m http.server 8000    # o bien: python -m http.server 8000
 ```
 
-Editor.js y sus complementos (`@editorjs/editorjs`, `header`, `paragraph`, `list`, `table`) se cargan desde jsDelivr con versiones fijas en `index.html`, así que hace falta conexión a Internet. `localhost.html` es una página auxiliar del usuario, reutilizada de un proyecto anterior ("Temporizador"), que sirve de acceso directo con las instrucciones para lanzar el servidor y enlaces a `localhost:8000`. No forma parte de la aplicación del editor.
+Editor.js y sus complementos (`@editorjs/editorjs`, `header`, `paragraph`, `list`, `table`) se cargan desde jsDelivr con versiones fijas en `index.html`, así que hace falta conexión a Internet. `notas.html` (antes `localhost.html`) es una página auxiliar del usuario, reutilizada de un proyecto anterior ("Temporizador"), que sirve de acceso directo con las instrucciones para lanzar el servidor, enlaces a `localhost:8000` y al repositorio de GitHub, y los pasos de Git para subir cambios. No forma parte de la aplicación del editor.
 
 No hay pruebas automáticas: comprueba los cambios a mano en el navegador, incluida la vista previa de impresión, porque la sección `@media print` de `css/styles.css` cambia el estilo de la página al imprimir.
 
