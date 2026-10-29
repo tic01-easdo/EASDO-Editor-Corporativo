@@ -43,9 +43,7 @@ class SignatureTool {
 
     constructor({ data, block }) {
         const value = data || {};
-        const signatures = Array.isArray(value.signatures)
-            ? value.signatures
-            : [{ name: typeof value.name === "string" ? value.name : "" }];
+        const signatures = Array.isArray(value.signatures) ? value.signatures : [];
         this.signatures = signatures.slice(0, SIGNATURE_MAX).map(signature => {
             const item = signature && typeof signature === "object" ? signature : {};
             return {
@@ -200,6 +198,7 @@ const LIST_MAX_COLUMNS = 3;
 
 // Lista repartida en 1 a 3 columnas (dato columns). Se llenan de arriba abajo con
 // ceil(elementos / columnas) filas, así que con 7 elementos en 3 columnas quedan 3 · 3 · 1.
+// El CSS usa siempre 3 columnas; con 2, un salto final (data-columns) deja vacía la tercera.
 class ListTool extends List {
     constructor(options) {
         super(options);
@@ -232,6 +231,11 @@ class ListTool extends List {
     updateColumns() {
         const wrapper = this._elements.wrapper;
         wrapper.classList.toggle("cdx-list--columns", this.columns > 1);
+        if (this.columns > 1) {
+            wrapper.dataset.columns = this.columns;
+        } else {
+            delete wrapper.dataset.columns;
+        }
         // Se recorre la lista entera: al pulsar Intro, el navegador copia los atributos del li anterior.
         const items = wrapper.querySelectorAll(`.${this.CSS.item}`);
         const rows = Math.max(Math.ceil(items.length / this.columns), 1);
@@ -272,6 +276,90 @@ class ListTool extends List {
         const data = { ...super.save() };
         if (this.columns > 1) {
             data.columns = this.columns;
+        }
+        return data;
+    }
+}
+
+// Encabezado H2 con una segunda línea opcional en otro idioma (dato translation), que se activa
+// con «Bilingüe» en el menú del bloque. Al desactivarlo, la segunda línea se borra.
+class HeaderTool extends Header {
+    constructor(options) {
+        super(options);
+        const translation = options.data && options.data.translation;
+        this.translation = typeof translation === "string" ? translation : null;
+        this.block = options.block;
+    }
+
+    static get sanitize() {
+        return { ...super.sanitize, translation: {} };
+    }
+
+    render() {
+        this.wrapper = document.createElement("div");
+        this.wrapper.className = "ce-header-block";
+        this.wrapper.append(super.render());
+        if (this.translation !== null) {
+            this.addTranslation(this.translation);
+        }
+        return this.wrapper;
+    }
+
+    addTranslation(value = "") {
+        const line = document.createElement("div");
+        line.className = "ce-header-translation";
+        line.contentEditable = this.readOnly ? "false" : "true";
+        line.setAttribute("role", "textbox");
+        line.setAttribute("aria-label", "Traducción del encabezado");
+        line.dataset.placeholder = "Valencià";
+        line.innerHTML = value;
+        this.wrapper.append(line);
+        this.wrapper.classList.add("is-bilingual");
+        this.translationLine = line;
+    }
+
+    removeTranslation() {
+        this.translationLine.remove();
+        this.translationLine = null;
+        this.wrapper.classList.remove("is-bilingual");
+    }
+
+    renderSettings() {
+        const bilingual = Boolean(this.translationLine);
+        return [
+            {
+                icon: super.renderSettings()[0].icon,
+                label: "Encabezado",
+                isActive: !bilingual,
+                closeOnActivate: true,
+                onActivate: () => {
+                    if (this.translationLine) {
+                        this.removeTranslation();
+                        this.block.dispatchChange();
+                    }
+                }
+            },
+            {
+                icon: '<svg width="24" height="24" viewBox="0 0 24 24"><path d="M6 8h12M6 16h9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+                label: "Bilingüe",
+                isActive: bilingual,
+                closeOnActivate: true,
+                onActivate: () => {
+                    if (!this.translationLine) {
+                        this.addTranslation();
+                        this.translationLine.focus();
+                        this.block.dispatchChange();
+                    }
+                }
+            }
+        ];
+    }
+
+    // Header guarda el innerHTML del elemento que recibe, que aquí sería el contenedor.
+    save() {
+        const data = super.save(this._element);
+        if (this.translationLine) {
+            data.translation = this.translationLine.innerHTML;
         }
         return data;
     }
@@ -504,9 +592,7 @@ class DatosTool {
                 const value = cell && typeof cell === "object" ? cell : {};
                 return {
                     header: typeof value.header === "string" ? value.header : "",
-                    content: typeof value.content === "string"
-                        ? value.content
-                        : typeof value.text === "string" ? value.text : "",
+                    content: typeof value.content === "string" ? value.content : "",
                     span: Math.min(6, Math.max(1, Math.floor(Number(value.span) || 1)))
                 };
             })
@@ -759,10 +845,7 @@ function readInitialDocument() {
             title: data.title,
             titleMarkup: typeof data.titleMarkup === "string"
                 ? data.titleMarkup
-                : TITLE_FONT_WEIGHTS.has(String(data.titleFontWeight)) &&
-                    String(data.titleFontWeight) !== DEFAULT_TITLE_FONT_WEIGHT
-                    ? `<span data-font-weight="${data.titleFontWeight}">${plainTextToTitleMarkup(data.title)}</span>`
-                    : plainTextToTitleMarkup(data.title),
+                : plainTextToTitleMarkup(data.title),
             documentHeading: typeof data.documentHeading === "string"
                 ? data.documentHeading
                 : DEFAULT_DOCUMENT_HEADING,
@@ -1047,8 +1130,9 @@ function countWords(blocks) {
         const data = block.data || {};
         switch (block.type) {
             case "paragraph":
-            case "header":
                 return data.text || "";
+            case "header":
+                return `${data.text || ""} ${data.translation || ""}`;
             case "list":
                 return Array.isArray(data.items) ? data.items.map(item =>
                     typeof item === "string" ? item : item.content || ""
@@ -1059,10 +1143,10 @@ function countWords(blocks) {
                 return Array.isArray(data.signatures)
                     ? data.signatures.map(signature => signature && `${signature.label || ""} ${signature.name || ""}`).join(" ") +
                         (typeof data.date === "string" ? ` FECHA / DATA ${data.date}` : "")
-                    : data.name || "";
+                    : "";
             case "datos":
                 return Array.isArray(data.cells)
-                    ? data.cells.map(cell => cell && `${cell.header || ""} ${cell.content || cell.text || ""}`).join(" ")
+                    ? data.cells.map(cell => cell && `${cell.header || ""} ${cell.content || ""}`).join(" ")
                     : "";
             default:
                 return "";
@@ -1096,9 +1180,9 @@ const editor = new EditorJS({
     inlineToolbar: true,
     tools: {
         header: {
-            class: Header,
+            class: HeaderTool,
             inlineToolbar: true,
-            config: { levels: [2, 3], defaultLevel: 2 }
+            config: { levels: [2], defaultLevel: 2 }
         },
         paragraph: {
             class: Paragraph,
@@ -1233,7 +1317,7 @@ titleInput.addEventListener("beforeinput", event => {
 });
 
 function validateDocument(data) {
-    const blocks = Array.isArray(data) ? data : data && data.blocks;
+    const blocks = data && data.blocks;
     if (!Array.isArray(blocks)) {
         throw new Error("El JSON no contiene una lista de bloques de Editor.js.");
     }
@@ -1244,17 +1328,14 @@ function validateDocument(data) {
         }
     }
 
-    const title = !Array.isArray(data) && typeof data.title === "string" ? data.title : DEFAULT_TITLE;
-    const titleMarkup = !Array.isArray(data) && typeof data.titleMarkup === "string"
+    const title = typeof data.title === "string" ? data.title : DEFAULT_TITLE;
+    const titleMarkup = typeof data.titleMarkup === "string"
         ? sanitizeTitleMarkup(data.titleMarkup)
-        : !Array.isArray(data) && TITLE_FONT_WEIGHTS.has(String(data.titleFontWeight)) &&
-            String(data.titleFontWeight) !== DEFAULT_TITLE_FONT_WEIGHT
-            ? `<span data-font-weight="${data.titleFontWeight}">${plainTextToTitleMarkup(title)}</span>`
-            : plainTextToTitleMarkup(title);
-    const documentHeading = !Array.isArray(data) && typeof data.documentHeading === "string"
+        : plainTextToTitleMarkup(title);
+    const documentHeading = typeof data.documentHeading === "string"
         ? data.documentHeading
         : DEFAULT_DOCUMENT_HEADING;
-    const footerText = !Array.isArray(data) && typeof data.footerText === "string"
+    const footerText = typeof data.footerText === "string"
         ? data.footerText
         : DEFAULT_FOOTER_TEXT;
     return { title, titleMarkup, documentHeading, footerText, blocks };
