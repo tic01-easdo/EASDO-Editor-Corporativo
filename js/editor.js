@@ -201,7 +201,7 @@ class SignatureTool {
 const TABLE_SHOW_STRETCH = false;
 const TABLE_MAX_COLUMNS = 10;
 const TABLE_COLUMN_STEP = 5;
-const TABLE_COLUMN_MIN = 10;
+const TABLE_COLUMN_MIN = 5;
 
 // Anchos de columna en porcentaje (colWidths). Sin colWidths, las columnas se reparten por igual.
 // Los bordes se arrastran desde .tc-col-resizers, que se superpone a la tabla en .tc-wrap.
@@ -243,14 +243,16 @@ class TableTool extends Table {
             this.updateColumnWidths();
         };
 
-        // El icono de columna de la librería se coloca suponiendo columnas iguales.
+        // El icono de columna de la librería se coloca suponiendo columnas iguales y una tabla
+        // que deja libre la columna de «añadir columna»; aquí la tabla ocupa todo el ancho.
         const updateToolboxesPosition = table.updateToolboxesPosition.bind(table);
         table.updateToolboxesPosition = (...args) => {
             updateToolboxesPosition(...args);
             const column = table.hoveredColumn;
-            if (this.colWidths && !table.isColumnMenuShowing && column > 0 && column <= this.colWidths.length) {
-                const center = this.columnEdges()[column - 1] + this.colWidths[column - 1] / 2;
-                table.toolboxColumn.element.style.left = `calc((100% - var(--cell-size)) * ${center / 100})`;
+            const widths = this.currentWidths();
+            if (!table.isColumnMenuShowing && column > 0 && column <= widths.length) {
+                const center = this.columnEdges(widths)[column - 1] + widths[column - 1] / 2;
+                table.toolboxColumn.element.style.left = `${center}%`;
             }
         };
 
