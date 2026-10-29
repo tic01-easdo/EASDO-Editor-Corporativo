@@ -281,13 +281,14 @@ class ListTool extends List {
     }
 }
 
-// Encabezado H2 con una segunda línea opcional en otro idioma (dato translation), que se activa
-// con «Bilingüe» en el menú del bloque. Al desactivarlo, la segunda línea se borra.
+// Encabezado H2 con una segunda línea en otro idioma (dato translation). Un encabezado nuevo
+// (sin text) empieza bilingüe; «H2» en el menú lo deja solo en castellano y borra esa línea.
 class HeaderTool extends Header {
     constructor(options) {
         super(options);
-        const translation = options.data && options.data.translation;
-        this.translation = typeof translation === "string" ? translation : null;
+        const data = options.data || {};
+        this.translation = typeof data.translation === "string" ? data.translation
+            : data.text === undefined ? "" : null;
         this.block = options.block;
     }
 
@@ -329,7 +330,7 @@ class HeaderTool extends Header {
         return [
             {
                 icon: super.renderSettings()[0].icon,
-                label: "Encabezado",
+                label: "H2",
                 isActive: !bilingual,
                 closeOnActivate: true,
                 onActivate: () => {
@@ -1243,7 +1244,7 @@ editor.isReady.then(() => {
 function addBlock(type, level = 2) {
     const blockData = {
         paragraph: { text: "" },
-        header: { text: "", level },
+        header: { text: "", level, translation: "" },
         list: { style: "unordered", items: [""] },
         table: { withHeadings: true, content: [["", ""], ["", ""]] },
         datos: { cells: Array.from({ length: 7 }, () => ({ header: "", content: "", span: 1 })) },

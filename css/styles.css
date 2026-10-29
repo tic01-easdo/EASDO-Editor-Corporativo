@@ -787,6 +787,7 @@ input:focus-visible {
 .editor-content h2.ce-header {
     font-size: 11pt;
     font-weight: 600;
+    text-transform: uppercase;
 }
 
 /* Encabezado bilingüe: segunda línea con el mismo cuerpo que el H2 y menor grosor. */
@@ -799,6 +800,7 @@ input:focus-visible {
     font-size: 11pt;
     font-weight: 300;
     line-height: 1.35;
+    text-transform: uppercase;
     outline: none;
 }
 
