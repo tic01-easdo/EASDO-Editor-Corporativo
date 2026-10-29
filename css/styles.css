@@ -794,14 +794,58 @@ input:focus-visible {
 }
 
 .editor-content .cdx-list {
-    padding-left: 25px;
-    color: #414d59;
-    font-size: 14px;
-    line-height: 1.75;
+    padding-left: 0;
+    list-style: none;
+    color: var(--black);
+    font-size: 10pt;
+    font-weight: 300;
+    line-height: 1.3;
 }
 
+/* Sangría francesa: la viñeta o el número quedan en el margen y el texto, alineado a su derecha.
+   Dentro de un elemento, interlineado 1.3 como el párrafo; el relleno de 0.15em arriba y abajo
+   mantiene la separación entre elementos que daba el 1.6em del complemento. */
 .editor-content .cdx-list__item {
-    padding: 3px 0;
+    position: relative;
+    padding: calc(3px + 0.15em) 0 calc(3px + 0.15em) 1.6em;
+    line-height: 1.3;
+}
+
+.editor-content .cdx-list__item::before {
+    position: absolute;
+    left: 0;
+}
+
+.editor-content .cdx-list--unordered > .cdx-list__item::before {
+    content: "•";
+}
+
+.editor-content .cdx-list--ordered {
+    counter-reset: lista;
+}
+
+.editor-content .cdx-list--ordered > .cdx-list__item {
+    counter-increment: lista;
+}
+
+.editor-content .cdx-list--ordered > .cdx-list__item::before {
+    content: counter(lista) ".";
+}
+
+/* Lista en columnas: tercios con el mismo hueco que .firma-grid; con 2 columnas el tercer tercio
+   queda libre. Cada columna tiene su propia altura; ListTool marca con data-column-start el
+   elemento que abre cada columna. */
+.editor-content .cdx-list--columns {
+    column-count: 3;
+    column-gap: 6%;
+}
+
+.editor-content .cdx-list--columns > .cdx-list__item {
+    break-inside: avoid;
+}
+
+.editor-content .cdx-list--columns > .cdx-list__item[data-column-start] {
+    break-before: column;
 }
 
 .editor-content .tc-wrap {
@@ -1186,7 +1230,7 @@ input:focus-visible {
 }
 
 .firma-space {
-    height: 30mm;
+    height: 20mm;
 }
 
 .firma-label:empty::before,

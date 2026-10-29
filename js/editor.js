@@ -196,6 +196,87 @@ class SignatureTool {
     }
 }
 
+const LIST_MAX_COLUMNS = 3;
+
+// Lista repartida en 1 a 3 columnas (dato columns). Se llenan de arriba abajo con
+// ceil(elementos / columnas) filas, así que con 7 elementos en 3 columnas quedan 3 · 3 · 1.
+class ListTool extends List {
+    constructor(options) {
+        super(options);
+        const columns = Number(options.data && options.data.columns);
+        this.columns = Number.isInteger(columns) ? Math.min(Math.max(columns, 1), LIST_MAX_COLUMNS) : 1;
+        this.block = options.block;
+    }
+
+    render() {
+        const wrapper = super.render();
+        this.observeColumns();
+        return wrapper;
+    }
+
+    // Cambiar entre viñetas y numerada sustituye el ul/ol por uno nuevo.
+    toggleTune(style) {
+        super.toggleTune(style);
+        this.observeColumns();
+    }
+
+    observeColumns() {
+        if (this.columnObserver) {
+            this.columnObserver.disconnect();
+        }
+        this.columnObserver = new MutationObserver(() => this.updateColumns());
+        this.columnObserver.observe(this._elements.wrapper, { childList: true });
+        this.updateColumns();
+    }
+
+    updateColumns() {
+        const wrapper = this._elements.wrapper;
+        wrapper.classList.toggle("cdx-list--columns", this.columns > 1);
+        // Se recorre la lista entera: al pulsar Intro, el navegador copia los atributos del li anterior.
+        const items = wrapper.querySelectorAll(`.${this.CSS.item}`);
+        const rows = Math.max(Math.ceil(items.length / this.columns), 1);
+        items.forEach((item, index) => {
+            item.toggleAttribute("data-column-start", this.columns > 1 && index > 0 && index % rows === 0);
+        });
+    }
+
+    renderSettings() {
+        return [
+            ...super.renderSettings(),
+            {
+                icon: '<svg width="12" height="12" viewBox="0 0 16 16"><path d="M8 4v8M4 8h8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+                title: "Añadir columna",
+                isDisabled: this.columns >= LIST_MAX_COLUMNS,
+                closeOnActivate: true,
+                onActivate: () => {
+                    this.columns += 1;
+                    this.updateColumns();
+                    this.block.dispatchChange();
+                }
+            },
+            {
+                icon: '<svg width="12" height="12" viewBox="0 0 16 16"><path d="M4 8h8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+                title: "Quitar columna",
+                isDisabled: this.columns <= 1,
+                closeOnActivate: true,
+                onActivate: () => {
+                    this.columns -= 1;
+                    this.updateColumns();
+                    this.block.dispatchChange();
+                }
+            }
+        ];
+    }
+
+    save() {
+        const data = { ...super.save() };
+        if (this.columns > 1) {
+            data.columns = this.columns;
+        }
+        return data;
+    }
+}
+
 // Stretch/Collapse no tienen efecto: el CSS ya quita el max-width a todos los bloques.
 // Se ocultan del menú de la tabla; para recuperarlas, pon TABLE_SHOW_STRETCH a true.
 const TABLE_SHOW_STRETCH = false;
@@ -1024,7 +1105,7 @@ const editor = new EditorJS({
             inlineToolbar: true
         },
         list: {
-            class: List,
+            class: ListTool,
             inlineToolbar: true
         },
         addCell: AddCellTune,
