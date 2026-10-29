@@ -1,0 +1,216 @@
+{
+  "app": "Oficina",
+  "version": 1,
+  "title": "INFORME FINAL\nINSTRUCTOR DE LA IDENTIDAD COLABORADORA\nCURSO ACADÉMICO 2024 / 2025",
+  "titleMarkup": "informe final<br><span data-font-weight=\"500\">INSTRUCTOR DE LA IDENTIDAD COLABORADORA</span><br><span data-font-weight=\"300\">CURSO ACADÉMICO 2024 / 2025</span>",
+  "documentHeading": "ESCUELA DE ARTE Y SUPERIOR DE DISEÑO DE ORIHUELA",
+  "footerText": "SAIC-PX-XX_ANEXO X_VX_10/06/2024 NOMBRE ACLARATORIO DEL DOCUMENTO",
+  "updatedAt": "2026-10-29T11:03:14.760Z",
+  "blocks": [
+    {
+      "id": "LE9CxcDsYz",
+      "type": "header",
+      "data": {
+        "text": "DATOS DEL ESTUDIANTE",
+        "level": 2
+      }
+    },
+    {
+      "id": "aKOkFfFIgX",
+      "type": "datos",
+      "data": {
+        "cells": [
+          {
+            "header": "apellidos, nombre / cognoms, nom",
+            "content": "ALEMAÑ MATEU VICENTE RAMÓN",
+            "span": 5
+          },
+          {
+            "header": "d.n.i. / N.I.E",
+            "content": "22547788D",
+            "span": 1
+          },
+          {
+            "header": "curso / curs",
+            "content": "2026/2027",
+            "span": 1
+          },
+          {
+            "header": "",
+            "content": "ASADS",
+            "span": 1
+          },
+          {
+            "header": "",
+            "content": "A",
+            "span": 1
+          },
+          {
+            "header": "",
+            "content": "",
+            "span": 2
+          },
+          {
+            "header": "",
+            "content": "",
+            "span": 1
+          },
+          {
+            "header": "",
+            "content": "",
+            "span": 2
+          },
+          {
+            "header": "",
+            "content": "",
+            "span": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "VDVT5tEvJg",
+      "type": "header",
+      "data": {
+        "text": "VISTO",
+        "level": 2
+      }
+    },
+    {
+      "id": "6jncxDPZ0D",
+      "type": "paragraph",
+      "data": {
+        "text": "No one shall be subjected to arbitrary arrest, detention or exile. Everyone is entitled in full equality to a fair and public hearing by an independent and impartial tribunal, in the determination of his rights and obligations and of any criminal charge against him."
+      }
+    },
+    {
+      "id": "VPGF48pbXQ",
+      "type": "paragraph",
+      "data": {
+        "text": "No one shall be subjected to arbitrary interference with his privacy, family, home or correspondence, nor to attacks upon his honour and reputation. Everyone has the right to the protection of the law against such interference or attacks."
+      }
+    },
+    {
+      "id": "264kc7i4i1",
+      "type": "header",
+      "data": {
+        "text": "CONSIDERANDO",
+        "level": 2
+      }
+    },
+    {
+      "id": "qwF2nkVjmF",
+      "type": "list",
+      "data": {
+        "style": "ordered",
+        "items": [
+          "Nombre y apellidos",
+          "farmane",
+          "lorenzo noseque",
+          "Guarano de las piedras",
+          "Marsopo Góme",
+          "Lorenzo Coso de maruenda",
+          "Mendrugo de hierba de cosa",
+          "Federico Huerto de Limón",
+          "Crusto de mario"
+        ],
+        "columns": 3
+      }
+    },
+    {
+      "id": "DKabWrNmzO",
+      "type": "paragraph",
+      "data": {
+        "text": "No one shall be subjected to arbitrary arrest, detention or exile. Everyone is entitled in full equality to a fair and public hearing by an independent and impartial tribunal, in the determination of his rights and obligations and of any criminal charge against him."
+      }
+    },
+    {
+      "id": "s6xrOuGcbw",
+      "type": "paragraph",
+      "data": {
+        "text": "No one shall be subjected to arbitrary interference with his privacy, family, home or correspondence, nor to attacks upon his honour and reputation. Everyone has the right to the protection of the law against such interference or attacks."
+      }
+    },
+    {
+      "id": "MC2JMkhR6w",
+      "type": "header",
+      "data": {
+        "text": "RESUELVO",
+        "level": 2
+      }
+    },
+    {
+      "id": "I96NGG5XLh",
+      "type": "paragraph",
+      "data": {
+        "text": "No one shall be subjected to arbitrary arrest, detention or exile. Everyone is entitled in full equality to a fair and public hearing by an independent and impartial tribunal, in the determination of his rights and obligations and of any criminal charge against him."
+      }
+    },
+    {
+      "id": "7i_jft9ekd",
+      "type": "paragraph",
+      "data": {
+        "text": "No one shall be subjected to arbitrary interference with his privacy, family, home or correspondence, nor to attacks upon his honour and reputation. Everyone has the right to the protection of the law against such interference or attacks."
+      }
+    },
+    {
+      "id": "L7fJB5kROo",
+      "type": "paragraph",
+      "data": {
+        "text": "No one shall be subjected to arbitrary arrest, detention or exile. Everyone is entitled in full equality to a fair and public hearing by an independent and impartial tribunal, in the determination of his rights and obligations and of any criminal charge against him."
+      }
+    },
+    {
+      "id": "QCGjEk_-sd",
+      "type": "table",
+      "data": {
+        "withHeadings": true,
+        "stretched": false,
+        "content": [
+          [
+            "sadsa",
+            "",
+            "",
+            ""
+          ],
+          [
+            "assad",
+            "",
+            "",
+            ""
+          ],
+          [
+            "assad",
+            "",
+            "",
+            ""
+          ]
+        ]
+      }
+    },
+    {
+      "id": "N7xHbxUIQU",
+      "type": "paragraph",
+      "data": {
+        "text": "sajdhkshd"
+      }
+    },
+    {
+      "id": "wvyP8-K_gY",
+      "type": "signature",
+      "data": {
+        "signatures": [
+          {
+            "label": "FIRMADO / SIGNAT",
+            "name": ""
+          },
+          {
+            "label": "FIRMADO / SIGNAT",
+            "name": ""
+          }
+        ],
+        "date": "26 / 10 / 2026"
+      }
+    }
+  ]
+}
