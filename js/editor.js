@@ -196,6 +196,214 @@ class SignatureTool {
     }
 }
 
+// Stretch/Collapse no tienen efecto: el CSS ya quita el max-width a todos los bloques.
+// Se ocultan del menú de la tabla; para recuperarlas, pon TABLE_SHOW_STRETCH a true.
+const TABLE_SHOW_STRETCH = false;
+const TABLE_MAX_COLUMNS = 10;
+const TABLE_COLUMN_STEP = 5;
+const TABLE_COLUMN_MIN = 5;
+
+// Anchos de columna en porcentaje (colWidths). Sin colWidths, las columnas se reparten por igual.
+// Los bordes se arrastran desde .tc-col-resizers, que se superpone a la tabla en .tc-wrap.
+class TableTool extends Table {
+    constructor(options) {
+        super(options);
+        const widths = options.data && options.data.colWidths;
+        this.colWidths = Array.isArray(widths) && widths.every(width => Number(width) > 0)
+            ? widths.map(Number)
+            : null;
+    }
+
+    render() {
+        const container = super.render();
+        const table = this.table;
+        if (this.colWidths && this.colWidths.length !== table.numberOfColumns) {
+            this.colWidths = null;
+        }
+
+        const addColumn = table.addColumn.bind(table);
+        table.addColumn = (...args) => {
+            const count = table.numberOfColumns;
+            addColumn(...args);
+            if (table.numberOfColumns !== count) {
+                this.colWidths = null;
+                this.updateColumnWidths();
+            }
+        };
+
+        // La columna eliminada cede su ancho a la de la derecha (o a la de la izquierda si es la última).
+        const deleteColumn = table.deleteColumn.bind(table);
+        table.deleteColumn = index => {
+            if (this.colWidths && this.colWidths.length > 1) {
+                const neighbor = index < this.colWidths.length ? index : index - 2;
+                this.colWidths[neighbor] += this.colWidths[index - 1];
+                this.colWidths.splice(index - 1, 1);
+            }
+            deleteColumn(index);
+            this.updateColumnWidths();
+        };
+
+        // El icono de columna de la librería se coloca suponiendo columnas iguales y una tabla
+        // que deja libre la columna de «añadir columna»; aquí la tabla ocupa todo el ancho.
+        const updateToolboxesPosition = table.updateToolboxesPosition.bind(table);
+        table.updateToolboxesPosition = (...args) => {
+            updateToolboxesPosition(...args);
+            const column = table.hoveredColumn;
+            const widths = this.currentWidths();
+            if (!table.isColumnMenuShowing && column > 0 && column <= widths.length) {
+                const center = this.columnEdges(widths)[column - 1] + widths[column - 1] / 2;
+                table.toolboxColumn.element.style.left = `${center}%`;
+            }
+        };
+
+        if (!this.readOnly) {
+            this.resizers = document.createElement("div");
+            this.resizers.className = "tc-col-resizers";
+            table.getWrapper().appendChild(this.resizers);
+        }
+        this.updateColumnWidths();
+        return container;
+    }
+
+    renderSettings() {
+        const settings = super.renderSettings();
+        settings.push({
+            icon: '<svg width="12" height="12" viewBox="0 0 16 16"><path d="M2.5 3.5h11v9h-11zM6.2 3.5v9M9.8 3.5v9" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>',
+            title: "Igualar columnas",
+            isDisabled: !this.colWidths,
+            closeOnActivate: true,
+            onActivate: () => {
+                this.colWidths = null;
+                this.updateColumnWidths();
+                this.block.dispatchChange();
+            }
+        });
+        if (TABLE_SHOW_STRETCH) {
+            return settings;
+        }
+        const stretchLabels = [this.api.i18n.t("Stretch"), this.api.i18n.t("Collapse")];
+        return settings.filter(item => !stretchLabels.includes(item.label));
+    }
+
+    onPaste(event) {
+        this.colWidths = null;
+        super.onPaste(event);
+    }
+
+    save() {
+        const data = super.save();
+        if (this.colWidths) {
+            data.colWidths = this.colWidths.map(width => Math.round(width * 100) / 100);
+        }
+        return data;
+    }
+
+    currentWidths() {
+        const count = this.table.numberOfColumns;
+        return this.colWidths || Array.from({ length: count }, () => 100 / count);
+    }
+
+    // Posición izquierda (en %) de cada columna.
+    columnEdges(widths = this.currentWidths()) {
+        let left = 0;
+        return widths.map(width => {
+            const edge = left;
+            left += width;
+            return edge;
+        });
+    }
+
+    updateColumnWidths() {
+        this.applyColumnTemplate(this.colWidths);
+        this.renderResizers();
+    }
+
+    applyColumnTemplate(widths) {
+        const table = this.table.table;
+        if (widths) {
+            table.style.setProperty("--table-columns", widths.map(width => `minmax(0, ${width}fr)`).join(" "));
+        } else {
+            table.style.removeProperty("--table-columns");
+        }
+    }
+
+    renderResizers() {
+        if (!this.resizers) {
+            return;
+        }
+        const widths = this.currentWidths();
+        const edges = this.columnEdges(widths);
+        this.resizers.replaceChildren();
+        for (let index = 1; index < widths.length; index++) {
+            const handle = document.createElement("div");
+            handle.className = "tc-col-resizer";
+            handle.style.left = `${edges[index]}%`;
+            handle.addEventListener("pointerdown", event => this.startResize(event, index - 1));
+            this.resizers.appendChild(handle);
+        }
+    }
+
+    // Arrastra el borde derecho de la columna `index`: solo cambian esa columna y la siguiente,
+    // y el borde se ajusta a múltiplos de TABLE_COLUMN_STEP.
+    startResize(event, index) {
+        if (event.button !== 0) {
+            return;
+        }
+        event.preventDefault();
+        event.stopPropagation();
+
+        const widths = this.currentWidths().slice();
+        const start = this.columnEdges(widths)[index];
+        const end = start + widths[index] + widths[index + 1];
+        const min = Math.ceil((start + TABLE_COLUMN_MIN) / TABLE_COLUMN_STEP) * TABLE_COLUMN_STEP;
+        const max = Math.floor((end - TABLE_COLUMN_MIN) / TABLE_COLUMN_STEP) * TABLE_COLUMN_STEP;
+        if (min > max) {
+            return;
+        }
+
+        const handle = event.currentTarget;
+        const rect = this.table.table.getBoundingClientRect();
+        const label = document.createElement("div");
+        label.className = "tc-col-resizer-label";
+        handle.classList.add("is-dragging");
+        handle.appendChild(label);
+        handle.setPointerCapture(event.pointerId);
+        let changed = false;
+        const updateLabel = () => {
+            label.textContent = `${Math.round(widths[index])} % | ${Math.round(widths[index + 1])} %`;
+        };
+
+        const move = moveEvent => {
+            const position = (moveEvent.clientX - rect.left) / rect.width * 100;
+            const edge = Math.min(max, Math.max(min, Math.round(position / TABLE_COLUMN_STEP) * TABLE_COLUMN_STEP));
+            if (Math.abs(edge - (start + widths[index])) > 0.001) {
+                widths[index] = edge - start;
+                widths[index + 1] = end - edge;
+                this.colWidths = widths.slice();
+                changed = true;
+                this.applyColumnTemplate(widths);
+                handle.style.left = `${edge}%`;
+            }
+            updateLabel();
+        };
+
+        const stop = () => {
+            handle.removeEventListener("pointermove", move);
+            handle.removeEventListener("pointerup", stop);
+            handle.removeEventListener("pointercancel", stop);
+            this.renderResizers();
+            if (changed) {
+                this.block.dispatchChange();
+            }
+        };
+
+        updateLabel();
+        handle.addEventListener("pointermove", move);
+        handle.addEventListener("pointerup", stop);
+        handle.addEventListener("pointercancel", stop);
+    }
+}
+
 function formatSignatureDate(date) {
     const pad = number => String(number).padStart(2, "0");
     return `${pad(date.getDate())} / ${pad(date.getMonth() + 1)} / ${date.getFullYear()}`;
@@ -821,9 +1029,9 @@ const editor = new EditorJS({
         },
         addCell: AddCellTune,
         table: {
-            class: Table,
+            class: TableTool,
             inlineToolbar: true,
-            config: { rows: 2, cols: 2 }
+            config: { rows: 2, cols: 2, maxcols: TABLE_MAX_COLUMNS }
         },
         datos: {
             class: DatosTool,

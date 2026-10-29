@@ -810,6 +810,100 @@ input:focus-visible {
     --color-background: #f8f9fa;
 }
 
+/* La tabla ocupa todo el ancho; el botón de añadir columna queda fuera, en el margen derecho. */
+.editor-content .tc-wrap {
+    grid-template-columns: 100% var(--cell-size);
+}
+
+.editor-content .tc-row {
+    grid-template-columns: var(--table-columns, repeat(auto-fit, minmax(10px, 1fr)));
+}
+
+/* Bordes como en .datos-grid: línea superior, líneas negras entre filas y columnas, sin bordes laterales. */
+.editor-content .tc-table {
+    padding-top: 1px;
+    border-top: 1px solid #000;
+}
+
+.editor-content .tc-row {
+    border-bottom: 1px solid #000;
+}
+
+/* Como en datos, el encabezado y la fila siguiente no se separan con línea. */
+.editor-content .tc-table--heading .tc-row:first-child {
+    border-bottom: none;
+}
+
+.editor-content .tc-row::after {
+    content: none;
+}
+
+.editor-content .tc-cell {
+    border-right: 1px solid #000;
+}
+
+.editor-content .tc-cell:last-child {
+    border-right: none;
+}
+
+/* La librería deja los menús de fila/columna (z-index 1) bajo la fila de encabezado (2)
+   y bajo .tc-col-resizers (3). */
+.editor-content .tc-toolbox {
+    z-index: 4;
+}
+
+/* Capa sobre la tabla (primera celda de la cuadrícula de .tc-wrap) con los bordes arrastrables. */
+.tc-col-resizers {
+    position: absolute;
+    grid-area: 1 / 1 / 2 / 2;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.tc-col-resizer {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 9px;
+    transform: translateX(-50%);
+    cursor: col-resize;
+    pointer-events: auto;
+    touch-action: none;
+}
+
+.tc-col-resizer::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 3px;
+    width: 3px;
+    background: var(--navy);
+    opacity: 0;
+    transition: opacity 0.1s;
+}
+
+.tc-col-resizer:hover::after,
+.tc-col-resizer.is-dragging::after {
+    opacity: 1;
+}
+
+.tc-col-resizer-label {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--navy);
+    color: #fff;
+    font-size: 11px;
+    line-height: 1.4;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
 .datos-block {
     margin: 0 0 10px;
     font-family: "Roboto Condensed", "Segoe UI", Arial, sans-serif;
@@ -952,35 +1046,51 @@ input:focus-visible {
     box-sizing: border-box;
     width: 100%;
     min-width: 0;
-    padding: 1px 4px 0 4px;
-    color: #161616;
     font: inherit;
     overflow-wrap: anywhere;
     outline: none;
 }
 
-.datos-cell-header {
+.datos-cell-header,
+.datos-cell-content,
+.editor-content .tc-cell {
     display: flex;
     align-items: center;
-    background: var(--light-grey);
-    font-size: 6pt;
-    text-transform: uppercase;
+}
+
+/* Encabezado y contenido comparten estilo en los bloques datos y tabla.
+   En la tabla, la fila de encabezado es la primera fila de .tc-table--heading. */
+.datos-cell-header,
+.datos-cell-content,
+.editor-content .tc-cell {
+    padding: 1px 4px 0 4px;
+    color: #161616;
+    font-family: "Roboto Condensed", "Segoe UI", Arial, sans-serif;
+    line-height: 1.4;
     font-weight: 400;
 }
 
-.datos-cell-content {
+.datos-cell-header,
+.editor-content .tc-table--heading .tc-row:first-child .tc-cell {
+    background: var(--light-grey);
+    font-size: 6pt;
+    text-transform: uppercase;
+}
 
-    display: flex;
-    align-items: center;
+.datos-cell-content,
+.editor-content .tc-cell {
     background: #fff;
     font-size: 11pt;
-    font-weight: 400;
 }
 
 .datos-cell-header:empty::before,
 .datos-cell-content:empty::before {
     color: #777;
     content: attr(data-placeholder);
+}
+
+.editor-content .tc-table--heading .tc-row:first-child [contenteditable]:empty::before {
+    color: #777;
 }
 
 .datos-cell-header:focus,
@@ -1361,7 +1471,8 @@ kbd {
     .ce-toolbar,
     .ce-inline-toolbar,
     .tc-toolbox,
-    .tc-popover {
+    .tc-popover,
+    .tc-col-resizers {
         display: none !important;
     }
 
@@ -1374,7 +1485,8 @@ kbd {
         padding-left: 4px;
     }
 
-    .datos-cell-header {
+    .datos-cell-header,
+    .editor-content .tc-table--heading .tc-row:first-child .tc-cell {
         background: var(--light-grey);
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
