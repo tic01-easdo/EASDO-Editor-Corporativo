@@ -22,6 +22,24 @@ No hay pruebas automáticas: comprueba los cambios a mano en el navegador, inclu
 
 ## Arquitectura
 
+EDITOR b1.6/
+├── css/
+│   └── styles.css
+├── docs/
+│   ├── INFORME FINAL-INSTRUCTOR DE LA IDENTIDAD COLABORADORA-CURSO ACADÉMICO 2024 - 2025.json
+│   ├── RESOLUCIÓN GENERAL.json
+│   └── Solicitud de Permiso.json
+├── img/
+│   └── EASDO_cabecera_oficial.png
+├── js/
+│   └── editor.js
+├── .gitattributes
+├── CLAUDE.md
+├── documentacion.html
+├── index.html
+├── notas.html
+└── README.md
+
 - `index.html`: estructura de la aplicación (barra lateral y barra superior con Cargar/Imprimir/Guardar) y el `article.document-page`, que contiene la imagen fija de la cabecera, el campo `#documentHeading`, el `#documentTitle` editable (contenteditable), el contenedor de Editor.js `#editor` y el pie (`#footerReference` y la fecha, que se genera sola). En el HTML queda una barra de inserción comentada (botones `data-block`); `editor.js` sigue conectando cualquier botón `[data-block]` mediante `addBlock()`.
 - `js/editor.js`: todo lo demás, en un único script global (sin módulos):
   - **Herramientas propias de Editor.js**: `SignatureTool` (`signature`), `DatosTool` (`datos`) y el ajuste de bloque `AddCellTune` (registrado como `addCell`, solo lo usa `datos` y llama a `block.call("addCell")`).
