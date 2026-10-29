@@ -718,6 +718,12 @@ const loadFileInput = document.getElementById("loadFileInput");
 let saveTimer;
 let toastTimer;
 let activeTitleRange = null;
+const HISTORY_LIMIT = 100;
+let undoStack = [];
+let redoStack = [];
+let currentSnapshot = null;
+let isRestoringHistory = false;
+let historyBusy = false;
 
 documentHeadingInput.value = initialDocument.documentHeading;
 setTitleContent(initialDocument.title, initialDocument.titleMarkup);
@@ -1003,10 +1009,105 @@ function storeDocument(blocks) {
         blocks
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    recordHistory(data);
     displayTitle(data.title);
     countWords(blocks);
     setSaveState("Copia local actualizada");
 }
+
+// Cada copia local que cambia el documento deja una instantánea en el historial de deshacer.
+function recordHistory(data) {
+    const snapshot = JSON.stringify({
+        blocks: data.blocks,
+        titleMarkup: data.titleMarkup,
+        documentHeading: data.documentHeading,
+        footerText: data.footerText
+    });
+    if (snapshot === currentSnapshot) {
+        return;
+    }
+
+    if (currentSnapshot !== null && !isRestoringHistory) {
+        undoStack.push(currentSnapshot);
+        if (undoStack.length > HISTORY_LIMIT) {
+            undoStack.shift();
+        }
+        redoStack = [];
+    }
+    currentSnapshot = snapshot;
+}
+
+async function applyDocumentState({ blocks, title, titleMarkup, documentHeading, footerText }) {
+    await editor.isReady;
+    if (blocks.length) {
+        await editor.render({ blocks });
+    } else {
+        await editor.clear();
+    }
+    documentHeadingInput.value = documentHeading;
+    setTitleContent(title, titleMarkup);
+    titleWeightLabel.textContent = DEFAULT_TITLE_FONT_WEIGHT;
+    titleWeightPopover.querySelectorAll("[data-title-weight]").forEach(option => {
+        option.setAttribute("aria-pressed", String(option.dataset.titleWeight === DEFAULT_TITLE_FONT_WEIGHT));
+    });
+    resizeDocumentTitle();
+    footerReference.value = footerText;
+    displayTitle(getTitleText());
+    schedulePagination();
+}
+
+async function stepHistory(direction) {
+    if (historyBusy) {
+        return;
+    }
+
+    historyBusy = true;
+    try {
+        await editor.isReady;
+        // Registra lo escrito durante la espera del guardado automático antes de moverse.
+        clearTimeout(saveTimer);
+        storeDocument((await editor.save()).blocks);
+
+        const [fromStack, toStack] = direction === "undo" ? [undoStack, redoStack] : [redoStack, undoStack];
+        if (!fromStack.length) {
+            showToast(direction === "undo" ? "No hay nada que deshacer." : "No hay nada que rehacer.");
+            return;
+        }
+
+        const focusIndex = editorHolder.contains(document.activeElement) ? editor.blocks.getCurrentBlockIndex() : -1;
+        const state = JSON.parse(fromStack.pop());
+        toStack.push(currentSnapshot);
+        isRestoringHistory = true;
+        await applyDocumentState({ ...state, title: "" });
+        storeDocument((await editor.save()).blocks);
+        if (focusIndex >= 0 && editor.blocks.getBlocksCount()) {
+            editor.caret.setToBlock(Math.min(focusIndex, editor.blocks.getBlocksCount() - 1), "end");
+        }
+    } catch (error) {
+        console.error("No se pudo recorrer el historial:", error);
+        showToast(direction === "undo" ? "No se pudo deshacer el cambio." : "No se pudo rehacer el cambio.");
+    } finally {
+        isRestoringHistory = false;
+        historyBusy = false;
+    }
+}
+
+document.addEventListener("keydown", event => {
+    if (!(event.ctrlKey || event.metaKey) || event.altKey) {
+        return;
+    }
+
+    const key = event.key.toLowerCase();
+    const isUndo = key === "z" && !event.shiftKey;
+    const isRedo = key === "y" || (key === "z" && event.shiftKey);
+    if (!isUndo && !isRedo) {
+        return;
+    }
+
+    // Sustituye al deshacer nativo, que solo actúa dentro de un campo y no ve los cambios de bloques.
+    event.preventDefault();
+    stepHistory(isUndo ? "undo" : "redo");
+}, true);
 
 const editor = new EditorJS({
     holder: "editor",
@@ -1246,17 +1347,7 @@ loadFileInput.addEventListener("change", async event => {
             return;
         }
 
-        await editor.isReady;
-        await editor.render({ blocks: loaded.blocks });
-        documentHeadingInput.value = loaded.documentHeading;
-        setTitleContent(loaded.title, loaded.titleMarkup);
-        titleWeightLabel.textContent = DEFAULT_TITLE_FONT_WEIGHT;
-        titleWeightPopover.querySelectorAll("[data-title-weight]").forEach(option => {
-            option.setAttribute("aria-pressed", String(option.dataset.titleWeight === DEFAULT_TITLE_FONT_WEIGHT));
-        });
-        resizeDocumentTitle();
-        footerReference.value = loaded.footerText;
-        displayTitle(getTitleText());
+        await applyDocumentState(loaded);
         const output = await editor.save();
         storeDocument(output.blocks);
         showToast("Documento cargado correctamente.");
@@ -1273,17 +1364,13 @@ function createNewDocument() {
         return;
     }
 
-    editor.isReady.then(async () => {
-        await editor.clear();
-        documentHeadingInput.value = DEFAULT_DOCUMENT_HEADING;
-        setTitleContent(DEFAULT_TITLE);
-        titleWeightLabel.textContent = DEFAULT_TITLE_FONT_WEIGHT;
-        titleWeightPopover.querySelectorAll("[data-title-weight]").forEach(option => {
-            option.setAttribute("aria-pressed", String(option.dataset.titleWeight === DEFAULT_TITLE_FONT_WEIGHT));
-        });
-        resizeDocumentTitle();
-        footerReference.value = DEFAULT_FOOTER_TEXT;
-        displayTitle(DEFAULT_TITLE);
+    applyDocumentState({
+        blocks: [],
+        title: DEFAULT_TITLE,
+        titleMarkup: null,
+        documentHeading: DEFAULT_DOCUMENT_HEADING,
+        footerText: DEFAULT_FOOTER_TEXT
+    }).then(() => {
         storeDocument([]);
         showToast("Documento nuevo creado.");
     }).catch(error => {
