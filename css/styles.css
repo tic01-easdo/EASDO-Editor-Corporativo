@@ -781,7 +781,7 @@ input:focus-visible {
 .editor-content .ce-header {
     padding: 30px 0 12px;
     font-weight: 300;
-    line-height: 1.35;
+    line-height: 0.6;
 }
 
 .editor-content h2.ce-header {
