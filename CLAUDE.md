@@ -30,6 +30,7 @@ EDITOR b1.6/
 │   ├── RESOLUCIÓN GENERAL.json
 │   └── Solicitud de Permiso.json
 ├── img/
+│   ├── bocetos/          (bocetos e imágenes de trabajo, no se usan en la aplicación)
 │   └── EASDO_cabecera_oficial.png
 ├── js/
 │   └── editor.js
