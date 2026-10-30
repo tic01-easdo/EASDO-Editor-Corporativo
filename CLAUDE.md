@@ -71,4 +71,4 @@ Un tipo de bloque nuevo debe añadirse en todos estos sitios: la configuración 
 
 ## Estilos
 
-`css/styles.css` define variables de diseño en `:root` (`--ink`, `--navy`, `--line`, etc., además de la geometría de la página `--page-height`/`--page-margin-*`/`--page-gap`; `PAGE_HEIGHT_MM` en `editor.js` debe coincidir con `--page-height`). También sobrescribe clases de Editor.js (`.ce-*` y los popovers; el popover del grosor del título reutiliza el marcado de `ce-popover`) y tiene puntos de corte adaptables en 900px y 680px, además de una sección `@media print`. La fuente es Roboto Condensed, de Google Fonts.
+`css/styles.css` define variables de diseño en `:root` (`--ink`, `--navy`, `--line`, etc., además de la geometría de la página `--page-height`/`--page-margin-*`/`--page-gap`; `PAGE_HEIGHT_MM` en `editor.js` debe coincidir con `--page-height`). También sobrescribe clases de Editor.js (`.ce-*` y los popovers; el popover del grosor del título reutiliza el marcado de `ce-popover`) y tiene puntos de corte adaptables en 900px y 680px, además de una sección `@media print`. La fuente es Geist Mono, de Google Fonts, en pesos de 300 a 600.
