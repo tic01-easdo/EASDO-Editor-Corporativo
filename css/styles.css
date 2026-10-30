@@ -24,7 +24,7 @@
     --page-gap: 28px;
 
     --shadow: 0 14px 45px rgb(32 42 54 / 7%), 0 2px 8px rgb(32 42 54 / 4%);
-    font-family: "Geist Mono", Arial, sans-serif;
+    font-family: "Roboto Condensed", Arial, sans-serif;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -485,7 +485,7 @@ input:focus-visible {
     height: calc(var(--page-count, 1) * (var(--page-height) + var(--page-gap)) - var(--page-gap));
     margin-inline: auto;
     padding: var(--page-margin-y) var(--page-margin-x);
-    font-family: "Geist Mono", "Segoe UI", Arial, sans-serif;
+    font-family: "Roboto Condensed", "Segoe UI", Arial, sans-serif;
     font-weight: 300;
 }
 
@@ -736,7 +736,7 @@ input:focus-visible {
 .editor-content {
     min-height: 340px;
     color: var(--black);
-    font-family: "Geist Mono", "Segoe UI", Arial, sans-serif;
+    font-family: "Roboto Condensed", "Segoe UI", Arial, sans-serif;
     font-size: 14px;
     font-weight: 300;
     line-height: 1.8;
@@ -975,7 +975,7 @@ input:focus-visible {
 
 .datos-block {
     margin: 0 0 10px;
-    font-family: "Geist Mono", "Segoe UI", Arial, sans-serif;
+    font-family: "Roboto Condensed", "Segoe UI", Arial, sans-serif;
     font-weight: 300;
     line-height: 1.4;
 }
@@ -1134,7 +1134,7 @@ input:focus-visible {
 .editor-content .tc-cell {
     padding: 1px 4px 0 4px;
     color: #161616;
-    font-family: "Geist Mono", "Segoe UI", Arial, sans-serif;
+    font-family: "Roboto Condensed", "Segoe UI", Arial, sans-serif;
     line-height: 1.4;
     font-weight: 400;
 }
@@ -1174,7 +1174,7 @@ input:focus-visible {
 .firma-block {
     padding-top: 70px;
     color: var(--black);
-    font-family: "Geist Mono", "Segoe UI", Arial, sans-serif;
+    font-family: "Roboto Condensed", "Segoe UI", Arial, sans-serif;
     font-weight: 400;
 }
 
