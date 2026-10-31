@@ -24,6 +24,7 @@
     --page-gap: 28px;
 
     --shadow: 0 14px 45px rgb(32 42 54 / 7%), 0 2px 8px rgb(32 42 54 / 4%);
+    --font-ui: "Geist Mono", monospace;
     font-family: "Roboto Condensed", Arial, sans-serif;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
@@ -87,11 +88,6 @@ input:focus-visible {
     display: block;
     width: 80px;
     height: auto;
-}
-
-.profile-copy {
-    display: grid;
-    gap: 2px;
 }
 
 .sidebar-heading,
@@ -554,28 +550,11 @@ input:focus-visible {
     border: 0;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 13px;
 }
 
 .document-title-weight-popover .ce-popover__item:hover,
 .document-title-weight-popover .ce-popover__item[aria-pressed="true"] {
     background: #edf3f9;
-}
-
-body .ce-popover,
-body .ce-popover * {
-    font-family: "Geist Mono", monospace;
-    font-weight: 400;
-    letter-spacing: .02em;
-    text-transform: uppercase;
-    font-size: 10px;
-}
-
-/* Los popovers tienen pocas opciones: sin buscador ni «Convert to» (ni su separador). */
-body .ce-popover .ce-popover__search,
-body .ce-popover [data-item-name="convert-to"],
-body .ce-popover [data-item-name="convert-to"] + .ce-popover-item-separator {
-    display: none;
 }
 
 .document-title {
@@ -696,6 +675,24 @@ body .ce-popover [data-item-name="convert-to"] + .ce-popover-item-separator {
     font-size: 14px;
     font-weight: 300;
     line-height: 1.8;
+}
+
+/* Popovers (menús de Editor.js y popover del grosor del título): texto de las opciones. */
+.ce-popover .ce-popover-item__title,
+.ce-popover .ce-popover__item-label {
+    font-family: var(--font-ui);
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+}
+
+/* Editor.js 2.30.8 sigue creando el buscador y «Convert to» (seguido de un separador);
+   aquí solo se ocultan. Revisar estos selectores al actualizar Editor.js. */
+.ce-popover .ce-popover__search,
+.ce-popover [data-item-name="convert-to"],
+.ce-popover [data-item-name="convert-to"] + .ce-popover-item-separator {
+    display: none;
 }
 
 .editor-content .codex-editor {
