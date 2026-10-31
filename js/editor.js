@@ -282,7 +282,7 @@ class ListTool extends List {
 }
 
 // Encabezado H2 con una segunda línea en otro idioma (dato translation). Un encabezado nuevo
-// (sin text) empieza bilingüe; «H2» en el menú lo deja solo en castellano y borra esa línea.
+// (sin text) empieza bilingüe; «Monolingüe» en el menú lo deja solo en castellano y borra esa línea.
 class HeaderTool extends Header {
     constructor(options) {
         super(options);
@@ -312,7 +312,7 @@ class HeaderTool extends Header {
         line.contentEditable = this.readOnly ? "false" : "true";
         line.setAttribute("role", "textbox");
         line.setAttribute("aria-label", "Traducción del encabezado");
-        line.dataset.placeholder = "Valencià";
+        line.dataset.placeholder = "TÍTOL";
         line.innerHTML = value;
         this.wrapper.append(line);
         this.wrapper.classList.add("is-bilingual");
@@ -327,10 +327,11 @@ class HeaderTool extends Header {
 
     renderSettings() {
         const bilingual = Boolean(this.translationLine);
+        const icon = super.renderSettings()[0].icon;
         return [
             {
-                icon: super.renderSettings()[0].icon,
-                label: "H2",
+                icon,
+                label: "Monolingüe",
                 isActive: !bilingual,
                 closeOnActivate: true,
                 onActivate: () => {
@@ -341,7 +342,7 @@ class HeaderTool extends Header {
                 }
             },
             {
-                icon: '<svg width="24" height="24" viewBox="0 0 24 24"><path d="M6 8h12M6 16h9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+                icon,
                 label: "Bilingüe",
                 isActive: bilingual,
                 closeOnActivate: true,
@@ -1183,7 +1184,7 @@ const editor = new EditorJS({
         header: {
             class: HeaderTool,
             inlineToolbar: true,
-            config: { levels: [2], defaultLevel: 2 }
+            config: { levels: [2], defaultLevel: 2, placeholder: "TÍTULO" }
         },
         paragraph: {
             class: Paragraph,

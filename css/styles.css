@@ -631,6 +631,13 @@ body .ce-popover * {
     font-size: 10px;
 }
 
+/* Los popovers tienen pocas opciones: sin buscador ni «Convert to» (ni su separador). */
+body .ce-popover .ce-popover__search,
+body .ce-popover [data-item-name="convert-to"],
+body .ce-popover [data-item-name="convert-to"] + .ce-popover-item-separator {
+    display: none;
+}
+
 .document-title {
     display: block;
     width: 100%;
