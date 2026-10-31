@@ -622,6 +622,15 @@ input:focus-visible {
     background: #edf3f9;
 }
 
+body .ce-popover,
+body .ce-popover * {
+    font-family: "Geist Mono", monospace;
+    font-weight: 400;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+    font-size: 10px;
+}
+
 .document-title {
     display: block;
     width: 100%;
