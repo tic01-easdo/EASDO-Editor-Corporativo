@@ -26,9 +26,7 @@ EDITOR b1.6/
 ├── css/
 │   └── styles.css
 ├── docs/
-│   ├── INFORME FINAL-INSTRUCTOR DE LA IDENTIDAD COLABORADORA-CURSO ACADÉMICO 2024 - 2025.json
-│   ├── RESOLUCIÓN GENERAL.json
-│   └── Solicitud de Permiso.json
+│   └── RESOLUCIÓN GENERAL.json
 ├── img/
 │   ├── bocetos/          (bocetos e imágenes de trabajo, no se usan en la aplicación)
 │   └── EASDO_cabecera_oficial.png
@@ -63,7 +61,7 @@ EDITOR b1.6/
 
 Un bloque `header` bilingüe añade `translation` a sus datos: `{text, level: 2, translation}`.
 
-No se mantiene compatibilidad con formatos anteriores: los documentos guardados son de prueba y pueden dejar de abrirse bien al cambiar el formato. En `docs/` hay documentos guardados de ejemplo (junto a impresiones en PDF del resultado esperado) que sirven para probar la carga. Las limitaciones del diálogo de guardado están en `documentacion.html`.
+No se mantiene compatibilidad con formatos anteriores: los documentos guardados son de prueba y pueden dejar de abrirse bien al cambiar el formato. En `docs/` hay un documento guardado de ejemplo (`RESOLUCIÓN GENERAL.json`) que sirve para probar la carga. Las limitaciones del diálogo de guardado están en `documentacion.html`.
 
 ### Añadir un tipo de bloque
 
