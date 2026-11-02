@@ -1217,7 +1217,79 @@ const editor = new EditorJS({
 window.editorInstance = editor;
 displayTitle(initialDocument.title);
 
+// Deshacer/rehacer de los bloques (editorjs-undo); los campos fijos usan el deshacer nativo.
+let undo = null;
+
+function resetUndoHistory(blocks) {
+    if (!undo) {
+        return;
+    }
+    undo.initialize(blocks);
+    undo.clear();
+}
+
+// Correcciones de editorjs-undo para los cambios hechos desde el menú del bloque.
+function patchUndo(history) {
+    let changedBlockIndex = -1;
+
+    // Cada paso apunta al bloque que cambió, no al que tiene el cursor: tras usar el menú
+    // del bloque Editor.js no tiene bloque actual (-1) y el primer Ctrl+Z fallaba.
+    const saveStep = history.save.bind(history);
+    history.save = state => {
+        const previous = history.stack[history.position].state;
+        changedBlockIndex = state.length === previous.length
+            ? state.findIndex((block, index) => JSON.stringify(block) !== JSON.stringify(previous[index]))
+            : -1;
+        try {
+            saveStep(state);
+        } finally {
+            changedBlockIndex = -1;
+        }
+    };
+
+    history.blocks = {
+        ...editor.blocks,
+        getCurrentBlockIndex: () => changedBlockIndex >= 0 ? changedBlockIndex : editor.blocks.getCurrentBlockIndex(),
+        // blocks.update() mezcla los datos nuevos con los actuales, así que no borraría
+        // claves opcionales (date, translation, columns); se sustituye el bloque entero.
+        update: async (id, data) => {
+            const block = editor.blocks.getById(id);
+            if (block) {
+                editor.blocks.insert(block.name, data, {}, editor.blocks.getBlockIndex(id), false, true, id);
+            }
+        }
+    };
+
+    // El complemento solo escucha los atajos dentro del editor, pero muchas opciones del menú
+    // del bloque dejan el foco en <body>. Fuera de cualquier campo se le pasan los atajos.
+    document.addEventListener("keydown", event => {
+        if (!(event.ctrlKey || event.metaKey) || event.altKey) {
+            return;
+        }
+        const target = event.target;
+        if (history.holder.contains(target) || target.closest("input, textarea, [contenteditable='true']")) {
+            return;
+        }
+
+        const key = event.key.toLowerCase();
+        if (key === "z" && !event.shiftKey) {
+            event.preventDefault();
+            history.undo();
+        } else if (key === "y" || (key === "z" && event.shiftKey)) {
+            event.preventDefault();
+            history.redo();
+        }
+    });
+}
+
 editor.isReady.then(() => {
+    undo = new Undo({
+        editor,
+        maxLength: 100,
+        config: { shortcuts: { undo: "CMD+Z", redo: ["CMD+Y", "CMD+SHIFT+Z"] } }
+    });
+    patchUndo(undo);
+    resetUndoHistory(initialDocument.blocks);
     countWords(initialDocument.blocks);
     setSaveState("Copia local actualizada");
     if (initialDocument.error) {
@@ -1413,6 +1485,7 @@ loadFileInput.addEventListener("change", async event => {
         displayTitle(getTitleText());
         const output = await editor.save();
         storeDocument(output.blocks);
+        resetUndoHistory(output.blocks);
         showToast("Documento cargado correctamente.");
     } catch (error) {
         console.error("No se pudo cargar el documento:", error);
@@ -1439,6 +1512,7 @@ function createNewDocument() {
         footerReference.value = DEFAULT_FOOTER_TEXT;
         displayTitle(DEFAULT_TITLE);
         storeDocument([]);
+        resetUndoHistory((await editor.save()).blocks);
         showToast("Documento nuevo creado.");
     }).catch(error => {
         console.error("No se pudo crear un documento nuevo:", error);
