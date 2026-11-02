@@ -745,7 +745,7 @@ input:focus-visible {
 
 /* Encabezado bilingüe: segunda línea con el mismo cuerpo que el H2 y menor grosor. */
 .editor-content .ce-header-block.is-bilingual h2.ce-header {
-    padding-bottom: 0;
+    padding-bottom: 2px;
 }
 
 .editor-content .ce-header-translation {
