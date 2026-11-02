@@ -12,27 +12,6 @@ const PAGE_FOOTER_SPACE_MM = 6;
 const SIGNATURE_MAX = 3;
 const SIGNATURE_DEFAULT_LABEL = "FIRMADO / SIGNAT";
 
-class AddCellTune {
-    static get isTune() {
-        return true;
-    }
-
-    constructor({ block }) {
-        this.block = block;
-    }
-
-    render() {
-        return {
-            icon: '<svg width="12" height="12" viewBox="0 0 16 16"><path d="M8 4v8M4 8h8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
-            label: "Crear celda",
-            onActivate: () => {
-                this.block.call("addCell");
-                this.block.dispatchChange();
-            }
-        };
-    }
-}
-
 class SignatureTool {
     static get toolbox() {
         return {
@@ -590,7 +569,8 @@ class DatosTool {
         };
     }
 
-    constructor({ data }) {
+    constructor({ data, block }) {
+        this.block = block;
         this.cells = Array.isArray(data && data.cells)
             ? data.cells.map(cell => {
                 const value = cell && typeof cell === "object" ? cell : {};
@@ -632,6 +612,18 @@ class DatosTool {
 
         wrapper.append(grid);
         return wrapper;
+    }
+
+    renderSettings() {
+        return [{
+            icon: '<svg width="12" height="12" viewBox="0 0 16 16"><path d="M8 4v8M4 8h8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
+            title: "Crear celda",
+            closeOnActivate: true,
+            onActivate: () => {
+                this.addCell();
+                this.block.dispatchChange();
+            }
+        }];
     }
 
     addCell() {
@@ -1196,16 +1188,12 @@ const editor = new EditorJS({
             class: ListTool,
             inlineToolbar: true
         },
-        addCell: AddCellTune,
         table: {
             class: TableTool,
             inlineToolbar: true,
             config: { rows: 2, cols: 2, maxcols: TABLE_MAX_COLUMNS }
         },
-        datos: {
-            class: DatosTool,
-            tunes: ["addCell"]
-        },
+        datos: DatosTool,
         signature: SignatureTool
     },
     data: { blocks: initialDocument.blocks },

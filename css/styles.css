@@ -677,9 +677,12 @@ input:focus-visible {
     line-height: 1.8;
 }
 
-/* Popovers (menús de Editor.js y popover del grosor del título): texto de las opciones. */
+/* Popovers (menús de Editor.js, popover del grosor del título y menú de las celdas de
+   `datos`): texto de las opciones. */
 .ce-popover .ce-popover-item__title,
-.ce-popover .ce-popover__item-label {
+.ce-popover .ce-popover__item-label,
+.datos-cell-width,
+.datos-cell-delete {
     font-family: var(--font-ui);
     font-size: 10px;
     font-weight: 400;
@@ -996,6 +999,8 @@ input:focus-visible {
     flex: 0 0 24px;
 }
 
+/* Menú de las celdas de `datos`: colores de las variables de `.ce-popover` de Editor.js 2.30.8
+   para que se vea igual que los demás popovers. Revisar al actualizar Editor.js. */
 .datos-cell-menu {
     position: absolute;
     top: 25px;
@@ -1003,10 +1008,10 @@ input:focus-visible {
     z-index: 10;
     width: 176px;
     padding: 9px;
-    border: 1px solid #e2e6eb;
-    border-radius: 7px;
+    border: 1px solid #eff0f1;
+    border-radius: 6px;
     background: #fff;
-    box-shadow: 0 8px 22px rgb(28 40 52 / 14%);
+    box-shadow: 0 3px 15px -3px rgb(13 20 33 / 10%);
     will-change: opacity, transform;
 }
 
@@ -1026,12 +1031,12 @@ input:focus-visible {
 
 .datos-cell-width,
 .datos-cell-delete {
-    border: 1px solid #d9e0e7;
-    border-radius: 4px;
-    background: #fff;
-    color: #46515e;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: #000;
     cursor: pointer;
-    font: 13px/1.2 Arial, sans-serif;
+    line-height: 1.2;
 }
 
 .datos-cell-width {
@@ -1041,10 +1046,13 @@ input:focus-visible {
 }
 
 .datos-cell-width:hover,
+.datos-cell-delete:hover {
+    background: rgb(232 232 235 / 49%);
+}
+
 .datos-cell-width.is-selected {
-    border-color: #aebdcb;
-    background: #eef3f8;
-    color: #263b50;
+    background: rgb(56 138 229 / 10%);
+    color: #388ae5;
 }
 
 .datos-cell-delete {
@@ -1054,13 +1062,7 @@ input:focus-visible {
     gap: 8px;
     margin-top: 8px;
     padding: 5px 4px;
-    border-color: transparent;
     text-align: left;
-    font-family: Georgia, "Times New Roman", serif;
-}
-
-.datos-cell-delete:hover {
-    background: #f3f6f9;
 }
 
 .datos-cell-header,
