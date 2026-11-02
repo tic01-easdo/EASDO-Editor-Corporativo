@@ -1240,7 +1240,7 @@ input:focus-visible {
 
 .footer-reference {
     display: block;
-    grid-column: 1 / -1;
+    grid-column: 1;
     width: 100%;
     padding: 0;
     border: 0;
@@ -1256,6 +1256,7 @@ input:focus-visible {
 }
 
 .document-page-number {
+    grid-column: 2;
     text-align: right;
 }
 
