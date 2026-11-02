@@ -3,7 +3,8 @@
 Abre el editor en Chrome sin ventana, usa los menús de los bloques y comprueba que
 cada cambio se deshace con un solo Ctrl/Cmd+Z y se rehace con Ctrl/Cmd+Y. Cada caso
 se prueba dos veces: haciendo clic en el bloque antes de abrir su menú y abriéndolo
-solo con el ratón por encima (así el foco queda fuera del editor).
+solo con el ratón por encima (así el foco queda fuera del editor). También comprueba
+que, tras «Cargar archivo» y «Documento nuevo», Ctrl+Z no vuelve al documento anterior.
 
 Requisitos: Google Chrome y Playwright (pip3 install --user playwright).
 Uso, con el servidor en marcha (py -3 -m http.server 8000):
@@ -12,7 +13,9 @@ Uso, con el servidor en marcha (py -3 -m http.server 8000):
 """
 
 import copy
+import json
 import sys
+from pathlib import Path
 
 from playwright.sync_api import sync_playwright
 
@@ -27,6 +30,7 @@ BASE_BLOCKS = [
     {"type": "paragraph", "data": {"text": "Dos"}},
 ]
 SIGNATURE, HEADER, LIST = 1, 2, 3
+SAMPLE_DOCUMENT = Path(__file__).resolve().parent.parent / "docs" / "RESOLUCIÓN GENERAL.json"
 
 results = []
 
@@ -94,6 +98,21 @@ def typing_case(page):
     check("Párrafo: Ctrl+Z deshace lo escrito", text == "Uno", text)
 
 
+def replace_document_case(page, name, action, expected):
+    load(page, copy.deepcopy(BASE_BLOCKS))
+    page.click(".ce-paragraph >> nth=0")
+    page.keyboard.type(" cambio")
+    page.wait_for_timeout(700)
+    action()
+    page.wait_for_timeout(700)
+    page.click(".ce-block >> nth=0")
+    press(page, f"{MOD}+z")
+    current = saved_blocks(page)
+    check(f"{name}: carga el documento esperado", current == expected, f"hay {len(current)} bloques")
+    check(f"{name}: Ctrl+Z no vuelve al documento anterior",
+          page.evaluate("() => !undo.canUndo()") and current == expected)
+
+
 def main():
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(channel="chrome", headless=True)
@@ -101,6 +120,8 @@ def main():
         errors = []
         page.on("pageerror", lambda error: errors.append(str(error)))
         page.on("console", lambda message: message.type == "error" and errors.append(message.text))
+        # Acepta los window.confirm() de «Cargar» y «Documento nuevo».
+        page.on("dialog", lambda dialog: dialog.accept())
         page.goto(URL)
         page.wait_for_function("() => typeof undo !== 'undefined' && undo")
 
@@ -120,6 +141,12 @@ def main():
 
         print()
         typing_case(page)
+        sample = json.loads(SAMPLE_DOCUMENT.read_text(encoding="utf-8"))
+        replace_document_case(page, "Cargar archivo",
+                              lambda: page.set_input_files("#loadFileInput", str(SAMPLE_DOCUMENT)),
+                              [{"type": b["type"], "data": b["data"]} for b in sample["blocks"]])
+        replace_document_case(page, "Documento nuevo",
+                              lambda: page.click(".new-document-button"), [])
         # El 404 del favicon.ico no tiene que ver con el editor.
         errors = [error for error in errors if "404" not in error]
         check("Sin errores en la consola", not errors, "; ".join(errors[:5]))

@@ -1459,6 +1459,29 @@ async function saveDocumentToFile() {
 document.getElementById("saveButton").addEventListener("click", saveDocumentToFile);
 document.getElementById("loadButton").addEventListener("click", () => loadFileInput.click());
 document.getElementById("printButton").addEventListener("click", () => window.print());
+// Sustituye el documento entero (al cargar un archivo o crear uno nuevo), lo guarda
+// y reinicia el historial de deshacer.
+async function applyDocumentState({ blocks, title, titleMarkup, documentHeading, footerText }) {
+    await editor.isReady;
+    if (blocks.length) {
+        await editor.render({ blocks });
+    } else {
+        await editor.clear();
+    }
+    documentHeadingInput.value = documentHeading;
+    setTitleContent(title, titleMarkup);
+    titleWeightLabel.textContent = DEFAULT_TITLE_FONT_WEIGHT;
+    titleWeightPopover.querySelectorAll("[data-title-weight]").forEach(option => {
+        option.setAttribute("aria-pressed", String(option.dataset.titleWeight === DEFAULT_TITLE_FONT_WEIGHT));
+    });
+    resizeDocumentTitle();
+    footerReference.value = footerText;
+    displayTitle(getTitleText());
+    const output = await editor.save();
+    storeDocument(output.blocks);
+    resetUndoHistory(output.blocks);
+}
+
 loadFileInput.addEventListener("change", async event => {
     const file = event.target.files[0];
     if (!file) {
@@ -1472,20 +1495,7 @@ loadFileInput.addEventListener("change", async event => {
             return;
         }
 
-        await editor.isReady;
-        await editor.render({ blocks: loaded.blocks });
-        documentHeadingInput.value = loaded.documentHeading;
-        setTitleContent(loaded.title, loaded.titleMarkup);
-        titleWeightLabel.textContent = DEFAULT_TITLE_FONT_WEIGHT;
-        titleWeightPopover.querySelectorAll("[data-title-weight]").forEach(option => {
-            option.setAttribute("aria-pressed", String(option.dataset.titleWeight === DEFAULT_TITLE_FONT_WEIGHT));
-        });
-        resizeDocumentTitle();
-        footerReference.value = loaded.footerText;
-        displayTitle(getTitleText());
-        const output = await editor.save();
-        storeDocument(output.blocks);
-        resetUndoHistory(output.blocks);
+        await applyDocumentState(loaded);
         showToast("Documento cargado correctamente.");
     } catch (error) {
         console.error("No se pudo cargar el documento:", error);
@@ -1500,19 +1510,12 @@ function createNewDocument() {
         return;
     }
 
-    editor.isReady.then(async () => {
-        await editor.clear();
-        documentHeadingInput.value = DEFAULT_DOCUMENT_HEADING;
-        setTitleContent(DEFAULT_TITLE);
-        titleWeightLabel.textContent = DEFAULT_TITLE_FONT_WEIGHT;
-        titleWeightPopover.querySelectorAll("[data-title-weight]").forEach(option => {
-            option.setAttribute("aria-pressed", String(option.dataset.titleWeight === DEFAULT_TITLE_FONT_WEIGHT));
-        });
-        resizeDocumentTitle();
-        footerReference.value = DEFAULT_FOOTER_TEXT;
-        displayTitle(DEFAULT_TITLE);
-        storeDocument([]);
-        resetUndoHistory((await editor.save()).blocks);
+    applyDocumentState({
+        blocks: [],
+        title: DEFAULT_TITLE,
+        documentHeading: DEFAULT_DOCUMENT_HEADING,
+        footerText: DEFAULT_FOOTER_TEXT
+    }).then(() => {
         showToast("Documento nuevo creado.");
     }).catch(error => {
         console.error("No se pudo crear un documento nuevo:", error);
