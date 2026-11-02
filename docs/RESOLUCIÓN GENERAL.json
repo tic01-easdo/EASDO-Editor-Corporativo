@@ -2,16 +2,18 @@
   "app": "Oficina",
   "version": 1,
   "title": "RESOLUCIÓN GENERAL",
+  "titleMarkup": "RESOLUCIÓN GENERAL",
   "documentHeading": "ESCUELA DE ARTE Y SUPERIOR DE DISEÑO DE ORIHUELA",
   "footerText": "SAIC-PX-XX_ANEXO X_VX_10/06/2024 NOMBRE ACLARATORIO DEL DOCUMENTO",
-  "updatedAt": "2026-10-22T11:39:07.162Z",
+  "updatedAt": "2026-11-02T11:10:11.165Z",
   "blocks": [
     {
       "id": "LE9CxcDsYz",
       "type": "header",
       "data": {
         "text": "DATOS DEL ESTUDIANTE",
-        "level": 2
+        "level": 2,
+        "translation": "DADES DE L'ESTUDIANT"
       }
     },
     {
@@ -35,34 +37,19 @@
             "span": 1
           },
           {
-            "header": "",
+            "header": "ESPECIALIDAD / ESPECIALITAT",
             "content": "ASADS",
-            "span": 1
-          },
-          {
-            "header": "",
-            "content": "A",
-            "span": 1
-          },
-          {
-            "header": "",
-            "content": "",
-            "span": 2
-          },
-          {
-            "header": "",
-            "content": "",
-            "span": 1
-          },
-          {
-            "header": "",
-            "content": "",
-            "span": 2
-          },
-          {
-            "header": "",
-            "content": "",
             "span": 3
+          },
+          {
+            "header": "REGISTRO ENTRADA / REGISTRE ENTRADA",
+            "content": "01/02/2026",
+            "span": 2
+          },
+          {
+            "header": "fecha solicitud / data SOL·LICITUD",
+            "content": "01/10/2026",
+            "span": 2
           }
         ]
       }
@@ -72,21 +59,29 @@
       "type": "header",
       "data": {
         "text": "VISTO",
-        "level": 2
+        "level": 2,
+        "translation": "VIST"
       }
     },
     {
       "id": "6jncxDPZ0D",
       "type": "paragraph",
       "data": {
-        "text": "No one shall be subjected to arbitrary arrest, detention or exile. Everyone is entitled in full equality to a fair and public hearing by an independent and impartial tribunal, in the determination of his rights and obligations and of any criminal charge against him."
+        "text": "No Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
       }
     },
     {
-      "id": "VPGF48pbXQ",
+      "id": "T0IwO4AQ2Q",
       "type": "paragraph",
       "data": {
-        "text": "No one shall be subjected to arbitrary interference with his privacy, family, home or correspondence, nor to attacks upon his honour and reputation. Everyone has the right to the protection of the law against such interference or attacks."
+        "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      }
+    },
+    {
+      "id": "p32L_sAQrq",
+      "type": "paragraph",
+      "data": {
+        "text": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem."
       }
     },
     {
@@ -94,21 +89,22 @@
       "type": "header",
       "data": {
         "text": "CONSIDERANDO",
-        "level": 2
+        "level": 2,
+        "translation": "CONSIDERANT"
       }
     },
     {
-      "id": "DKabWrNmzO",
+      "id": "Do7IWzwk6y",
       "type": "paragraph",
       "data": {
-        "text": "No one shall be subjected to arbitrary arrest, detention or exile. Everyone is entitled in full equality to a fair and public hearing by an independent and impartial tribunal, in the determination of his rights and obligations and of any criminal charge against him."
+        "text": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur."
       }
     },
     {
-      "id": "s6xrOuGcbw",
+      "id": "Whk5Apfnj9",
       "type": "paragraph",
       "data": {
-        "text": "No one shall be subjected to arbitrary interference with his privacy, family, home or correspondence, nor to attacks upon his honour and reputation. Everyone has the right to the protection of the law against such interference or attacks."
+        "text": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem"
       }
     },
     {
@@ -116,35 +112,28 @@
       "type": "header",
       "data": {
         "text": "RESUELVO",
-        "level": 2
+        "level": 2,
+        "translation": "RESOLC"
       }
     },
     {
-      "id": "I96NGG5XLh",
+      "id": "5bUpxJ6V3J",
       "type": "paragraph",
       "data": {
-        "text": "No one shall be subjected to arbitrary arrest, detention or exile. Everyone is entitled in full equality to a fair and public hearing by an independent and impartial tribunal, in the determination of his rights and obligations and of any criminal charge against him."
+        "text": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur."
       }
     },
     {
-      "id": "7i_jft9ekd",
-      "type": "paragraph",
+      "id": "e40nLPFmpL",
+      "type": "signature",
       "data": {
-        "text": "No one shall be subjected to arbitrary interference with his privacy, family, home or correspondence, nor to attacks upon his honour and reputation. Everyone has the right to the protection of the law against such interference or attacks."
-      }
-    },
-    {
-      "id": "L7fJB5kROo",
-      "type": "paragraph",
-      "data": {
-        "text": "No one shall be subjected to arbitrary arrest, detention or exile. Everyone is entitled in full equality to a fair and public hearing by an independent and impartial tribunal, in the determination of his rights and obligations and of any criminal charge against him."
-      }
-    },
-    {
-      "id": "vbtOhz_5Ok",
-      "type": "paragraph",
-      "data": {
-        "text": "No one shall be subjected to arbitrary interference with his privacy, family, home or correspondence, nor to attacks upon his honour and reputation. Everyone has the right to the protection of the law against such interference or attacks."
+        "signatures": [
+          {
+            "label": "FIRMADO / SIGNAT",
+            "name": ""
+          }
+        ],
+        "date": "02 / 11 / 2026"
       }
     }
   ]
