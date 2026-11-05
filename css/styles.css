@@ -88,6 +88,7 @@ input:focus-visible {
     display: block;
     width: 80px;
     height: auto;
+    margin-right: 6px;
 }
 
 .sidebar-heading,
@@ -677,10 +678,12 @@ input:focus-visible {
     line-height: 1.8;
 }
 
-/* Popovers (menús de Editor.js, popover del grosor del título y menú de las celdas de
-   `datos`): texto de las opciones. */
+/* Popovers (menús de Editor.js, popover del grosor del título, menú de las celdas de
+   `datos` y menú de filas y columnas de las tablas): texto de las opciones. El selector
+   de las tablas lleva dos clases para ganar al CSS que inyecta @editorjs/table. */
 .ce-popover .ce-popover-item__title,
 .ce-popover .ce-popover__item-label,
+.tc-popover .tc-popover__item-label,
 .datos-cell-width,
 .datos-cell-delete {
     font-family: var(--font-ui);
@@ -688,6 +691,18 @@ input:focus-visible {
     font-weight: 400;
     letter-spacing: .02em;
     text-transform: uppercase;
+}
+
+/* @editorjs/table deja sus iconos a 24px; Editor.js 2.30.8 reduce los suyos a 20px, y con
+   el mismo viewBox el trazo se vería más grueso. */
+.tc-popover .tc-popover__item-icon svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* La librería también amplía la X al confirmar (`scale(1.2)`); se conserva solo el giro. */
+.tc-popover .tc-popover__item--confirm .tc-popover__item-icon svg {
+    transform: rotate(90deg);
 }
 
 /* Editor.js 2.30.8 sigue creando el buscador y «Convert to» (seguido de un separador);
@@ -748,7 +763,7 @@ input:focus-visible {
 
 /* Encabezado bilingüe: segunda línea con el mismo cuerpo que el H2 y menor grosor. */
 .editor-content .ce-header-block.is-bilingual h2.ce-header {
-    padding-bottom: 2px;
+    padding-bottom: 1px;
 }
 
 .editor-content .ce-header-translation {
