@@ -1,0 +1,94 @@
+{
+  "app": "Oficina",
+  "version": 1,
+  "title": "CONSTITUCIÓN DEL TRIBUNAL\nEVALUACIÓN TFG",
+  "titleMarkup": "CONSTITUCIÓN DEL TRIBUNAL<br><span data-font-weight=\"300\">EVALUACIÓN TFG</span>",
+  "documentHeading": "TRABAJO DE FIN DE GRADO",
+  "footerText": "SAIC-P7-01-ANEXO 18_V0-06-09-24_REGISTRO. CONSTITUCIÓN DEL TRIBUNAL DE EVALUACIÓN DEL TFG",
+  "updatedAt": "2026-11-05T08:47:39.468Z",
+  "blocks": [
+    {
+      "id": "DoyOrPfJ74",
+      "type": "datos",
+      "data": {
+        "cells": [
+          {
+            "header": "especialidad / especilitat",
+            "content": "FOTOGRAFÍA, AUDIOVISUALES Y DISEÑO",
+            "span": 4
+          },
+          {
+            "header": "CURSO / CURS",
+            "content": "2024 / 2025",
+            "span": 1
+          },
+          {
+            "header": "CONVOCATORIA / CONVOCATÒRIA",
+            "content": "JUNIO / JULIO",
+            "span": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "9WntN9CMJ4",
+      "type": "header",
+      "data": {
+        "text": "TUTORES",
+        "level": 2,
+        "translation": "TUTORS"
+      }
+    },
+    {
+      "id": "QtYzChHeFA",
+      "type": "table",
+      "data": {
+        "withHeadings": true,
+        "stretched": false,
+        "content": [
+          [
+            "TRIBUNAL EN LA DEFENSA",
+            "APELLIDOS , NOMBRE / COGNOMS, NOM"
+          ],
+          [
+            "PRESIDENTE",
+            ""
+          ],
+          [
+            "SECRETARIO",
+            ""
+          ],
+          [
+            "VOCAL 1",
+            ""
+          ],
+          [
+            "VOCAL 2",
+            ""
+          ]
+        ],
+        "colWidths": [
+          20,
+          80
+        ]
+      }
+    },
+    {
+      "id": "xVye6Cm8bM",
+      "type": "signature",
+      "data": {
+        "signatures": [
+          {
+            "label": "PRESIDENTE / PRESIDENT",
+            "name": ""
+          },
+          {
+            "label": "SECRETARIO / SECRETARI",
+            "name": ""
+          }
+        ],
+        "date": "05 / 11 / 2026"
+      }
+    }
+  ]
+}

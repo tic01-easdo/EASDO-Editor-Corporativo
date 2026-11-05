@@ -1,0 +1,50 @@
+{
+  "app": "Oficina",
+  "version": 1,
+  "title": "REGISTRO / CONSTITUCIÓN DE LA COMISIÓN ACADÉMICA DE ESPECIALIDAD FIN DE GRADO\nCURSO ACADÉMICO 2026 / 2027",
+  "titleMarkup": "REGISTRO / CONSTITUCIÓN DE LA COMISIÓN ACADÉMICA DE ESPECIALIDAD FIN DE GRADO<br><span data-font-weight=\"300\">CURSO ACADÉMICO 2026 / 2027</span>",
+  "documentHeading": "TRABAJO DE FIN DE GRADO",
+  "footerText": "SAIC-PX-XX_ANEXO X_VX_10/06/2024 NOMBRE ACLARATORIO DEL DOCUMENTO",
+  "updatedAt": "2026-11-05T08:24:21.564Z",
+  "blocks": [
+    {
+      "id": "DoyOrPfJ74",
+      "type": "datos",
+      "data": {
+        "cells": [
+          {
+            "header": "especialidad / especilitat",
+            "content": "FOTOGRAFÍA, AUDIOVISUALES Y DISEÑO",
+            "span": 4
+          },
+          {
+            "header": "CURSO / CURS",
+            "content": "2024 / 2025",
+            "span": 1
+          },
+          {
+            "header": "CONVOCATORIA / CONVOCATÒRIA",
+            "content": "JUNIO / JULIO",
+            "span": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "9WntN9CMJ4",
+      "type": "header",
+      "data": {
+        "text": "TUTORES",
+        "level": 2,
+        "translation": "TUTORS"
+      }
+    },
+    {
+      "id": "t9xpy6vS4i",
+      "type": "paragraph",
+      "data": {
+        "text": "Aquí hay un caso de lista con encabezado,&nbsp;"
+      }
+    }
+  ]
+}

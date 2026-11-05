@@ -1,0 +1,87 @@
+{
+  "app": "Oficina",
+  "version": 1,
+  "title": "REGISTRO DE ENTRADA\nSOLICITUD DE DEFENSA DEL TRABAJO FIN DE GRADO",
+  "titleMarkup": "<span data-font-weight=\"300\"><span data-font-weight=\"500\">registro de entrada<br></span>solicitud de defensa del trabajo fin de grado</span>",
+  "documentHeading": "TRABAJO DE FIN DE GRADO",
+  "footerText": "SAIC-P7-01-ANEXO 15_V0-06-09-24_REGISTRO_DE_ENTRADA_SOLICITUD_DE_DEFENSA_TFG",
+  "updatedAt": "2026-11-05T09:18:27.894Z",
+  "blocks": [
+    {
+      "id": "DoyOrPfJ74",
+      "type": "datos",
+      "data": {
+        "cells": [
+          {
+            "header": "apellidos, nombre / cognoms, nom",
+            "content": "",
+            "span": 5
+          },
+          {
+            "header": "\n\nEXPEDIENTE/EXPEDIENT\n\n",
+            "content": "",
+            "span": 1
+          },
+          {
+            "header": "\n\nD.N.I. - N.I.E.\n\n",
+            "content": "00000000X",
+            "span": 1
+          },
+          {
+            "header": "  ESPECIALIDAD / ESPECIALITAT  ",
+            "content": "",
+            "span": 4
+          },
+          {
+            "header": "  CURSO / CURS  ",
+            "content": "",
+            "span": 1
+          },
+          {
+            "header": "CONVOCATORIA / \n\nCONVOCATÒRIA\n\n",
+            "content": "",
+            "span": 2
+          },
+          {
+            "header": "  CENTRO / CENTRE  ",
+            "content": "ESCUELA DE ARTE Y SUPERIOR DE DISEÑO DE ORIHUELA",
+            "span": 5
+          },
+          {
+            "header": " REP. PROPIA O AUT. /REP. PRÒPIA O AUT. ",
+            "content": "PERSONA AUTORIZADA",
+            "span": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "DJxq0UINIT",
+      "type": "paragraph",
+      "data": {
+        "text": "En caso de que se autorice a otra persona para presentar esta solicitud se deberá adjuntar copia original de autorización del interesado (<a href=\"https://www.gva.es/downloads/publicados/IN/01946_BI.pdf\">aquí</a>) junto a copia del D.N.I. de&nbsp; ambos, titular y persona autorizada."
+      }
+    },
+    {
+      "id": "xVye6Cm8bM",
+      "type": "signature",
+      "data": {
+        "signatures": [
+          {
+            "label": "ESTUDIANTE / ESTUDIANT",
+            "name": ""
+          },
+          {
+            "label": "REPRESENTANTE / REPRESENTANT",
+            "name": ""
+          },
+          {
+            "label": "DEPT. PROJECTES I INVESTIGACIÓ",
+            "name": "JEFATURA DE DEPARTAMENTO / CAP DE DEPARTAMENT"
+          }
+        ],
+        "date": "05 / 11 / 2026"
+      }
+    }
+  ]
+}
